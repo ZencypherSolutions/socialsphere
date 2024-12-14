@@ -1,6 +1,5 @@
 "use client";
 import React, { forwardRef, ButtonHTMLAttributes } from "react";
-import { Slot } from "@radix-ui/react-slot";
 
 const buttonVariants = {
   variant: {
@@ -28,7 +27,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof buttonVariants.variant;
   size?: keyof typeof buttonVariants.size;
   className?: string;
-  asChild?: boolean;
 }
 
 const cn = (...classes: (string | undefined)[]) => {
@@ -36,10 +34,7 @@ const cn = (...classes: (string | undefined)[]) => {
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className = "", variant = "default", size = "sm", asChild, ...props },
-    ref
-  ) => {
+  ({ className = "", variant = "default", size = "sm", ...props }, ref) => {
     const combinedClassName = cn(
       "inline-flex items-center justify-center whitespace-nowrap rounded-md text-base font-medium",
       "ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2",
@@ -49,8 +44,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className
     );
 
-    const Comp = asChild ? Slot : "button";
-    return <Comp ref={ref} className={combinedClassName} {...props} />;
+    return <button ref={ref} className={combinedClassName} {...props} />;
   }
 );
 
