@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Globe2, LayoutDashboard, Sparkles, User2 } from 'lucide-react'
-import Link from "next/link"
+import { Globe2, LayoutDashboard, Sparkles, User2 } from "lucide-react";
+import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -14,8 +14,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import Profile from './ui/profile'
+} from "@/components/ui/sidebar";
+import Profile from "./ui/profile";
 
 export function SocialSphereSidebar() {
   return (
@@ -63,8 +63,8 @@ export function SocialSphereSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
-      <Profile/>
+      <Profile name={"John Doe"} />
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

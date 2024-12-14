@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SidebarFooter } from "@/components/ui/sidebar";
 import { Gem, GemIcon } from "lucide-react";
 
-const Profile = () => {
+const Profile = ({ name }: { name: string }) => {
   return (
     <>
       <SidebarFooter className="mt-auto border-t p-4">
@@ -25,7 +25,7 @@ const Profile = () => {
               </div>
             </AvatarFallback>
           </Avatar>
-          <span>John Doe</span>
+          <span>{name}</span>
         </Button>
       </SidebarFooter>
     </>
