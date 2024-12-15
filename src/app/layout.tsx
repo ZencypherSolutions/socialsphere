@@ -1,6 +1,8 @@
 import "@/app/globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SocialSphereSidebar } from "@/components/social-sphere-sidebar";
+import { CommunityBanner } from "@/components/community-banner";
+
 
 export const metadata = {
   title: "Social Sphere",
@@ -15,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+      <CommunityBanner /> 
         <SidebarProvider>
           <div className="flex min-h-screen">
             <SocialSphereSidebar />
