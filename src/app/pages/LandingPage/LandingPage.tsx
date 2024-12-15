@@ -51,20 +51,23 @@ const LandingPage = () => {
           {[
             {
               text: "Seamless DAO templates with voting and secure fund management for communities.",
-              image: "/seamless.png",
+              image: "/Frame 11.svg",
+              id: 1,
             },
             {
               text: "Empower groups with roles, proposal boards, and financial tools for clear governance.",
               image: "/governance-tools.svg",
+              id: 2,
             },
             {
               text: "Simplify decisions and funds with stablecoins, multi-sig wallets, and user-friendly tools.",
               image: "/simplify.png",
+              id: 3,
             },
           ].map((feature, index) => (
             <div
               key={index}
-              className="bg-[#387478] text-white p-6 rounded-[45px] shadow-xl items-center w-full max-w-[399px] h-[213px] px-[60px] py-[70px] flex justify-between"
+              className="bg-[#387478] text-white p-6 rounded-[45px] shadow-xl items-center w-full max-w-[399px] h-[213px] px-[60px] py-[70px] flex justify-between gap-5"
             >
               <p className="flex-1 text-[18px] md:text-base font-space leading-[22.98px]">
                 {feature.text}
@@ -72,7 +75,13 @@ const LandingPage = () => {
               <img
                 src={feature.image}
                 alt={`Feature ${index + 1}`}
-                className="w-16 h-16 object-contain"
+                className={`object-contain ${
+                  feature.id === 1
+                    ? "w-[94.4px] h-[63.49px]"
+                    : feature.id === 2
+                    ? "w-[70px] h-[71px]"
+                    : "w-[90.44px] h-[72.96px]"
+                }`}
               />
             </div>
           ))}
@@ -88,7 +97,7 @@ const LandingPage = () => {
             blockchain technology and good design. We are not just UI freaks! We
             advocate users for better product experience and common sense.
           </p>
-          <p className="flex items-center leading-[39px] text-[18px] text-[#232931] font-inter font-[400] ml-[25%]">
+          <p className="flex items-center leading-[39px] text-[18px] text-[#232931] font-inter font-[400] ml-[27%]">
             More About us
             <FaArrowRight size={24} color="gray" className="ml-2" />
           </p>
@@ -199,7 +208,11 @@ const LandingPage = () => {
                   <img
                     src={step.quarterImage}
                     alt={`Quarter ${step.quarter}`}
-                    className="max-w-full max-h-full object-contain"
+                    className={`object-contain ${
+                      step.id === 1
+                        ? "max-w-[90px] max-h-[90px]"
+                        : "max-w-[70px] max-h-[71px]"
+                    }`}
                   />
                 </div>
                 <img

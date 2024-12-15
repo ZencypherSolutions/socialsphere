@@ -10,7 +10,7 @@ const Header = () => {
           SocialSphere
         </h1>
       </div>
-      <nav className="space-x-4  mt-4 md:mt-0 text-[20px] leading-[28px]">
+      <nav className="flex gap-6 mt-4 md:mt-0 text-[20px] leading-[28px]">
         <a href="#" className="text-[#000000] hover:text-[#232931]">
           About us
         </a>
@@ -20,11 +20,12 @@ const Header = () => {
         <a href="#" className="text-[#000000] hover:text-[#232931]">
           Use Cases
         </a>
-        <a href="#" className="text-[#000000]hover:text-[#232931]">
+        <a href="#" className="text-[#000000] hover:text-[#232931]">
           Forum
         </a>
       </nav>
-      <button className="bg-[#E36C59] hover:bg-[#e37e6f] text-white px-4 py-2 rounded-[20px] mt-4 md:mt-0 w-[157px] h-[48px]   gap-0  opacity-1 shadow-md leading-[27px]">
+
+      <button className="bg-[#E36C59] hover:bg-[#e37e6f] text-white px-4 py-2 rounded-[30px] mt-4 md:mt-0 w-[157px] h-[48px]   gap-0  opacity-1 shadow-lg leading-[27px]">
         Launch Dapp
       </button>
     </header>
