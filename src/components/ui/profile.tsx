@@ -4,13 +4,10 @@ import { Button } from "@/components/ui/button";
 import { SidebarFooter } from "@/components/ui/sidebar";
 import { Gem, GemIcon } from "lucide-react";
 
-const Profile = ({ name }: { name: string }) => {
+const Profile = ({ username }: { username: string }) => {
   return (
     <>
       <SidebarFooter className="mt-auto border-t p-4">
-        <div className="flex items-center text-purple-700 text-xs font-medium gap-2">
-          <GemIcon /> Navbar Profile
-        </div>
         <Button
           variant="ghost"
           className="w-full justify-start gap-2 bg-[#2c5154] text-white hover:bg-[#3d4f59] hover:text-white rounded-full"
@@ -25,7 +22,7 @@ const Profile = ({ name }: { name: string }) => {
               </div>
             </AvatarFallback>
           </Avatar>
-          <span>{name}</span>
+          <span>{username}</span>
         </Button>
       </SidebarFooter>
     </>
