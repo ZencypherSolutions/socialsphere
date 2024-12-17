@@ -20,10 +20,10 @@ export function CommunityBanner({
         {/* Main banner container with special shape */}
         <div className="bg-[#387479] rounded-[30px] relative pl-[180px] pr-6 py-4 min-h-[90px] flex items-start justify-between w-[98%]">
           {/* Perfect circular icon container */}
-          <div className="absolute left-[78px] top-1/2 -translate-y-1/2 h-[90px] w-[90px]">
+          <div className="absolute left-[78px] top-[85%] -translate-y-1/2 h-[90px] w-[90px]">
             <div className="bg-[#232931] w-full h-full rounded-full flex items-center justify-center relative">
-              {/* Adjusted Globe2 icon size and position */}
-              <Globe2 className="h-[30px] w-[30px] text-white absolute right-3 -top-[1px]" />
+              {/* Adjusted Globe2 icon position to move down */}
+              <Globe2 className="h-[30px] w-[30px] text-white absolute right-3 top-3" />
             </div>
           </div>
 
