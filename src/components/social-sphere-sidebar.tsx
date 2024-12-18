@@ -63,7 +63,7 @@ export function SocialSphereSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
-      <Profile name={"John Doe"} />
+      <Profile username={"John Doe"} />
       <SidebarRail />
     </Sidebar>
   );
