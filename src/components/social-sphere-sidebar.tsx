@@ -80,4 +80,3 @@ export function SocialSphereSidebar() {
     </Sidebar>
   )
 }
-
