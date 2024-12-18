@@ -16,8 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-      <CommunityBanner /> 
+      <body>     
         <SidebarProvider>
           <div className="flex min-h-screen">
             <SocialSphereSidebar />
