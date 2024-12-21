@@ -15,6 +15,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import Profile from './ui/profile'
 
 export function SocialSphereSidebar() {
   return (
@@ -62,22 +63,8 @@ export function SocialSphereSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="mt-auto border-t p-4">
-        <Button
-          variant="ghost"
-          className="w-full justify-start gap-2 bg-[#2c5154] text-white hover:bg-[#3d4f59] hover:text-white rounded-full"
-        >
-          <Avatar className="h-6 w-6">
-            <AvatarImage src="/placeholder.svg" />
-            <AvatarFallback>
-              <User2 className="h-4 w-4" />
-            </AvatarFallback>
-          </Avatar>
-          <span>John Doe</span>
-        </Button>
-      </SidebarFooter>
+      <Profile username={"John Doe"}/>
       <SidebarRail />
     </Sidebar>
   )
 }
-
