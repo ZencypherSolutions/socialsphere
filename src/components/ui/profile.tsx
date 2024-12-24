@@ -2,7 +2,6 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { SidebarFooter } from "@/components/ui/sidebar";
-import { Gem, GemIcon } from "lucide-react";
 
 const Profile = ({ username }: { username: string }) => {
   return (

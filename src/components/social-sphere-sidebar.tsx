@@ -1,14 +1,12 @@
 "use client"
 
-import { Globe2, LayoutDashboard, Sparkles, User2 } from 'lucide-react'
+import { Globe2, LayoutDashboard, Sparkles } from 'lucide-react'
 import Link from "next/link"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
+  
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
