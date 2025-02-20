@@ -6,7 +6,7 @@ const LoginPage = () => {
         <div className="flex items-center justify-center w-full h-[100vh] bg-[#EEEEEE] font-inter">
             <div className="flex flex-col gap-8 w-[350px] md:w-[480px] bg-[#FFFFFF] py-10 px-14 rounded-[40px] shadow-xl text-center">
                 <div className="flex flex-col gap-2">
-                    <div className="text-[40px] font-semibold text-[#323643] drop-shadow-2xl">Sign In</div>
+                    <div className="text-[40px] font-semibold text-[#323643] [text-shadow:2px_2px_4px_rgba(0,0,0,0.2)]">Sign In</div>
                     <div className="text-[#323643] font-medium text-sm">
                         Please enter a username for your account and connect your wallet
                     </div>
