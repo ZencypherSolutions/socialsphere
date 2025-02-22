@@ -18,19 +18,12 @@ export default function LogInPage() {
                     />
                     <button className="w-full max-w-[403px] h-[50px] flex items-center justify-center gap-5 sm:gap-3 bg-[#4151FF] text-white font-semibold rounded-[20px] shadow-md hover:bg-[#3240CC] transition">
                         <Image
-                            src="/walletIcon.svg"
+                            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS13YWxsZXQiPjxwYXRoIGQ9Ik0xOSA3VjRhMSAxIDAgMCAwLTEtMUg1YTIgMiAwIDAgMCAwIDRoMTVhMSAxIDAgMCAxIDEgMXY0aC0zYTIgMiAwIDAgMCAwIDRoM2ExIDEgMCAwIDAgMS0xdi0yYTEgMSAwIDAgMC0xLTEiLz48cGF0aCBkPSJNMyA1djE0YTIgMiAwIDAgMCAyIDJoMTVhMSAxIDAgMCAwIDEtMXYtNCIvPjwvc3ZnPg=="
                             alt="Wallet Icon"
                             width={36}
                             height={27}
                         />
-                        <Image
-                            src="/walletBroch.svg"
-                            alt="Wallet Broch"
-                            width={8.14}
-                            height={4.1}
-                            className="sm:mt-1.5 sm:mx-[-24px] mx-[-32px] mt-1.5"
-                        />
-                        <p className="font-medium text-[18px] sm:text-[20px] leading-[24.2px] sm:mx-5 ml-6">Connect Wallet</p>
+                        <p className="font-medium text-[18px] sm:text-[20px] leading-[24.2px]">Connect Wallet</p>
                     </button>
                 </div>
             </div>
