@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { Wallet } from 'lucide-react';
 
 export default function LogInPage() {
     return (
@@ -17,12 +17,7 @@ export default function LogInPage() {
                         className="w-full max-w-[403px] h-[50px] border border-[#7D7D7D] rounded-[20px] text-center text-lg sm:text-[20px] leading-[24.2px] px-4"
                     />
                     <button className="w-full max-w-[403px] h-[50px] flex items-center justify-center gap-5 sm:gap-3 bg-[#4151FF] text-white font-semibold rounded-[20px] shadow-md hover:bg-[#3240CC] transition">
-                        <Image
-                            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS13YWxsZXQiPjxwYXRoIGQ9Ik0xOSA3VjRhMSAxIDAgMCAwLTEtMUg1YTIgMiAwIDAgMCAwIDRoMTVhMSAxIDAgMCAxIDEgMXY0aC0zYTIgMiAwIDAgMCAwIDRoM2ExIDEgMCAwIDAgMS0xdi0yYTEgMSAwIDAgMC0xLTEiLz48cGF0aCBkPSJNMyA1djE0YTIgMiAwIDAgMCAyIDJoMTVhMSAxIDAgMCAwIDEtMXYtNCIvPjwvc3ZnPg=="
-                            alt="Wallet Icon"
-                            width={36}
-                            height={27}
-                        />
+                        <Wallet color='white' size={32} />
                         <p className="font-medium text-[18px] sm:text-[20px] leading-[24.2px]">Connect Wallet</p>
                     </button>
                 </div>
