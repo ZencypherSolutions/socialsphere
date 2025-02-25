@@ -29,7 +29,7 @@ export function SocialSphereSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="w-full bg-[#E07A5F] text-white hover:bg-[#cc6952] hover:text-white rounded-full"
+              className="w-full bg-primary text-white hover:bg-primary/90 hover:text-white rounded-full"
             >
               <Link href="/communities" className="flex items-center gap-2">
                 <Globe2 className="h-5 w-5" />
@@ -40,7 +40,7 @@ export function SocialSphereSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="w-full bg-[#E07A5F] text-white hover:bg-[#cc6952] hover:text-white rounded-full"
+              className="w-full bg-primary text-white hover:bg-primary/90 hover:text-white rounded-full"
             >
               <Link href="/wizard" className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
@@ -51,7 +51,7 @@ export function SocialSphereSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="w-full bg-[#E07A5F] text-white hover:bg-[#cc6952] hover:text-white rounded-full"
+              className="w-full bg-primary text-white hover:bg-primary/90 hover:text-white rounded-full"
             >
               <Link href="/dashboard" className="flex items-center gap-2">
                 <LayoutDashboard className="h-5 w-5" />

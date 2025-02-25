@@ -1,7 +1,6 @@
 import Header from '@/component/Header';
 import Head from "next/head";
 import React from 'react'
-import { BiArrowBack } from 'react-icons/bi';
 import { FaArrowRight } from 'react-icons/fa';
 
 const LandingPage = () => {
@@ -27,7 +26,7 @@ const LandingPage = () => {
                 Empowering
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold font-space bg-[#387478] px-[20px]  text-white py-[10px] rounded-[30px] justify-self-end leading-[50px] shadow-md">
+              <h1 className="text-4xl md:text-5xl font-bold font-space bg-primary px-[20px] text-white py-[10px] rounded-[30px] justify-self-end leading-[50px] shadow-md">
                 Communities
               </h1>
               <div className="text-4xl md:text-5xl font-bold text-[#232931] font-space mr-20 right-8 px-[15px] py-[5px] leading-[50px]">
@@ -41,7 +40,7 @@ const LandingPage = () => {
           <p className="mt-4 text-sm md:text-base leading-[24px] text-center">
             Are you new here?
           </p>
-          <button className="bg-[#E36C59] w-[213.34px] h-[48px]  hover:bg-[#e37e6f] text-white px-4 md:px-6 py-2 md:py-3 mt-6 rounded-[10px] leading-[18px]">
+          <button className="bg-primary w-[213.34px] h-[48px]  hover:bg-primary/90 text-white px-4 md:px-6 py-2 md:py-3 mt-6 rounded-[10px] leading-[18px]">
             Get started
           </button>
         </section>
@@ -67,7 +66,7 @@ const LandingPage = () => {
           ].map((feature, index) => (
             <div
               key={index}
-              className="bg-[#387478] text-white p-6 rounded-[45px] shadow-xl items-center w-full max-w-[399px] h-[213px] px-[60px] py-[70px] flex justify-between gap-5"
+              className="bg-muted text-white p-6 rounded-[45px] shadow-xl items-center w-full max-w-[399px] h-[213px] px-[60px] py-[70px] flex justify-between gap-5"
             >
               <p className="flex-1 text-[18px] md:text-base font-space leading-[22.98px]">
                 {feature.text}
@@ -75,20 +74,22 @@ const LandingPage = () => {
               <img
                 src={feature.image}
                 alt={`Feature ${index + 1}`}
-                className={`object-contain ${
+                className={`object-contain filter brightness-0 invert ${
                   feature.id === 1
                     ? "w-[94.4px] h-[63.49px]"
                     : feature.id === 2
                     ? "w-[70px] h-[71px]"
                     : "w-[90.44px] h-[72.96px]"
+                    
                 }`}
               />
+
             </div>
           ))}
         </section>
 
         {/* about us  */}
-        <section className="text-center py-16 px-6 bg-[#EEEEEE]">
+        <section className="text-center py-16 px-6 bg-secondary text-secondary-foreground">
           <h3 className="text-[115px] md:text-3xl font-bold mb-6 font-space leading-[144px]">
             About
           </h3>
@@ -97,7 +98,7 @@ const LandingPage = () => {
             blockchain technology and good design. We are not just UI freaks! We
             advocate users for better product experience and common sense.
           </p>
-          <p className="flex items-center leading-[39px] text-[18px] text-[#232931] font-inter font-[400] ml-[27%]">
+          <p className="flex items-center leading-[39px] text-[18px]  font-inter font-[400] ml-[27%]">
             More About us
             <FaArrowRight size={24} color="gray" className="ml-2" />
           </p>
@@ -119,47 +120,42 @@ const LandingPage = () => {
             {[
               {
                 quarter: "Q1",
-                quarterImage: "/q1.svg",
+                quarterImage: "/white_star.png",
                 text: "Q1: Launch MVP and onboard users.",
                 id: 1,
                 image: "/line 5.svg",
               },
               {
                 quarter: "Q2",
-                quarterImage: "/star 1.svg",
-
+                quarterImage: "/color_star.png",
                 text: "Q2: Add features and enhance accessibility.",
                 id: 2,
                 image: "/line 6.svg",
               },
               {
                 quarter: "Q3",
-                quarterImage: "/star 1.svg",
-
+                quarterImage: "/color_star.png",
                 text: "Q3: Grow partnerships and user engagement.",
                 id: 3,
                 image: "/line 7.svg",
               },
               {
                 quarter: "Q4",
-                quarterImage: "/star 1.svg",
-
+                quarterImage: "/color_star.png",
                 text: "Q4: Optimize tools and expand capabilities.",
                 id: 4,
                 image: "/line 8.svg",
               },
               {
                 quarter: "Q5",
-                quarterImage: "/star 1.svg",
-
+                quarterImage: "/color_star.png",
                 text: "Q5: Scale globally and integrate feedback.",
                 id: 5,
                 image: "/line 9.svg",
               },
               {
                 quarter: "Q6",
-                quarterImage: "/stars 2.svg",
-
+                quarterImage: "/white_star.png",
                 text: "Q6: Innovate advanced features for communities.",
                 id: 6,
               },
@@ -201,7 +197,7 @@ const LandingPage = () => {
                 <div
                   className={`w-[258px] h-[120px] rounded-[30px] flex items-center justify-center text-white text-lg font-bold shadow-xl ${
                     step.id === 1 || step.id === 6
-                      ? "bg-[#387478]"
+                      ? "bg-primary"
                       : "bg-[#FFFFFF]"
                   }`}
                 >
