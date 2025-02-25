@@ -10,8 +10,7 @@ export default function Home() {
     <>
       <div>
  
-        <LandingPage />
-       <LogInPage/>
+     <LogInPage/>
      </div>
     </>
   );
