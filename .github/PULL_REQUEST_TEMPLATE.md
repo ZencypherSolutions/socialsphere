@@ -21,7 +21,6 @@
 
 <!-- Reference any related issues here. -->
 
-- Closes #<!-- Issue number -->
 - Fixes #<!-- Issue number -->
 
 ## Screenshots or Screen Recording
