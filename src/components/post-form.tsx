@@ -80,8 +80,8 @@ export const PostComponent: React.FC<PostDataProp> = ({ data }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-[#2C5154] rounded-xl shadow-lg">
-      <div className="flex items-center mb-4 sm:mb-6 bg-[#387478] rounded-3xl p-2">
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-[#2C3161] rounded-xl shadow-lg">
+      <div className="flex items-center mb-4 sm:mb-6 bg-[#EEEEEE] bg-opacity-30 rounded-3xl p-2">
         <img
           src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg"
           alt="User Avatar"
@@ -97,7 +97,7 @@ export const PostComponent: React.FC<PostDataProp> = ({ data }) => {
         </div>
       </div>
       <div className="mb-4">
-        <span className="inline-block bg-[#E36C59] text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
+        <span className="inline-block bg-[#4151FF] text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
           {data.category}
         </span>
       </div>
@@ -111,14 +111,14 @@ export const PostComponent: React.FC<PostDataProp> = ({ data }) => {
         {/* Comment Input */}
         <div className="flex flex-col gap-2">
           <textarea
-            className="text-white w-full h-32 sm:h-64 rounded-lg shadow-md p-4 resize-none bg-[#387478] focus:outline-none focus:border-[#4ECCA3]"
+            className="text-white w-full h-32 sm:h-64 rounded-lg shadow-md p-4 resize-none bg-[#EEEEEE] bg-opacity-30 focus:outline-none focus:border-[#4ECCA3]"
             placeholder="Add a comment..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
           <Button
             onClick={handleComment}
-            className="bg-[#4ECCA3] hover:bg-[#45b38f]"
+            className="bg-[#4151FF] hover:bg-[#4151FF]/80 text-white"
           >
             <Send className="h-4 w-4" />
           </Button>
@@ -127,12 +127,15 @@ export const PostComponent: React.FC<PostDataProp> = ({ data }) => {
         {/* Comments List */}
         <div className="space-y-3">
           {comments.map((comment) => (
-            <div key={comment.id} className="bg-[#387478] p-3 rounded-lg">
+            <div
+              key={comment.id}
+              className="bg-[#EEEEEE] bg-opacity-30 p-3 rounded-lg"
+            >
               <div className="flex justify-between items-center mb-2">
                 <span className="text-white text-sm font-semibold">
                   {comment.username}
                 </span>
-                <span className="text-gray-400 text-xs">
+                <span className="text-white text-xs">
                   {comment.timestamp.toLocaleDateString()}
                 </span>
               </div>
@@ -142,7 +145,7 @@ export const PostComponent: React.FC<PostDataProp> = ({ data }) => {
         </div>
       </div>
       <div className="flex items-center gap-4 my-4 w-full">
-        <div className="flex items-center gap-2 px-3 rounded-2xl bg-gray-400">
+        <div className="flex items-center gap-2 px-3 rounded-2xl bg-[#F7F7F7] bg-opacity-30">
           <Button
             variant="link"
             size="sm"
@@ -172,7 +175,7 @@ export const PostComponent: React.FC<PostDataProp> = ({ data }) => {
           variant="link"
           size="sm"
           onClick={() => setShowComments(!showComments)}
-          className="text-white flex items-center gap-2 px-3 rounded-2xl bg-gray-400 hover:no-underline"
+          className="text-white flex items-center gap-2 px-3 rounded-2xl bg-[#F7F7F7] bg-opacity-30 hover:no-underline"
         >
           <MessageSquare size={16} />
           <span>{comments.length}</span>
