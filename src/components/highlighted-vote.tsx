@@ -15,7 +15,7 @@ export default function HighlightedVote({
   comments = 0
 }: HighlightedVoteProps) {
   return (
-    <Card className="max-w-sm border-none bg-[#2C5154] shadow-xl rounded-3xl">
+    <Card className="max-w-sm border-none bg-secondary shadow-xl rounded-3xl">
       <CardHeader className="pb-2">
         <h2 className="text-3xl font-medium text-white">
           {question}
@@ -24,7 +24,7 @@ export default function HighlightedVote({
       <CardContent className="space-y-12">
         <Badge
           variant="secondary"
-          className="bg-[#E36C59] border-none font-normal px-3 hover:bg-[#E36C59] shadow-xl text-[#EEEEEE] text-lg rounded-full"
+          className="bg-primary border-none font-normal px-3 hover:bg-primary/90 shadow-xl text-[#EEEEEE] text-lg rounded-full"
         >
           {category}
         </Badge>

@@ -80,12 +80,12 @@ export const PostComponent: React.FC<PostDataProp> = ({ data }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-[#2C3161] rounded-xl shadow-lg">
-      <div className="flex items-center mb-4 sm:mb-6 bg-[#EEEEEE] bg-opacity-30 rounded-3xl p-2">
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-secondary rounded-xl shadow-lg">
+      <div className="flex items-center mb-4 sm:mb-6 bg-background/20 bg-opacity-30 rounded-3xl p-2">
         <img
           src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg"
           alt="User Avatar"
-          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-[#4ECCA3]"
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-secondary"
         />
         <div className="ml-4 w-full">
           <div className="flex items-center w-full justify-between">
