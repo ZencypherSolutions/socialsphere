@@ -1,7 +1,7 @@
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { SidebarFooter } from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/shared/components/avatar";
+import { Button } from "@/app/shared/components/button";
+import { SidebarFooter } from "@/app/shared/components/sidebar";
 
 const Profile = ({ username }: { username: string }) => {
   return (

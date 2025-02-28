@@ -1,4 +1,4 @@
-import Header from '@/component/Header';
+import Header from '@/app/shared/components/Header';
 import Head from "next/head";
 import React from 'react'
 import { FaArrowRight } from 'react-icons/fa';

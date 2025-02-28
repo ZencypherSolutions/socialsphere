@@ -1,11 +1,11 @@
-// components/Header.js
+
 import React from "react";
 
 const Header = () => {
   return (
     <header className="flex flex-wrap justify-between items-center px-6 py-4  shadow-sm">
       <div className="flex items-center space-x-3">
-        <img src="/Logo.svg" alt="Logo" className="bg-[#EEEEEE]" />
+        <img src="logo.svg" alt="Logo" className="bg-[#EEEEEE]" />
         <h1 className="text-xl font-bold text-[#000000] hover:text-[#232931]">
           SocialSphere
         </h1>

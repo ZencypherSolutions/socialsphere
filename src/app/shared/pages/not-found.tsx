@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/app/shared/components/button"
 import { ArrowLeft } from "lucide-react"
 
 export default function NotFound() {

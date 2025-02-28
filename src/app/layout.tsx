@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import "@/app/globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { SocialSphereSidebar } from "@/components/social-sphere-sidebar";
-import { CommunityBanner } from "@/components/community-banner";
-import { Navbar } from '@/component/Navbar';
 
 
 const geistMono = Geist_Mono({
