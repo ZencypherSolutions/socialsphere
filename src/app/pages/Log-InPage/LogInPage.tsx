@@ -2,56 +2,69 @@
 
 import { useState, useEffect } from "react";
 import { Wallet, AlertCircle } from "lucide-react";
-import { isConnected, requestAccess, getAddress } from "@stellar/freighter-api";
+import { connect, disconnect } from "starknetkit";
 
 export default function LogInPage() {
 	// User input states
 	const [username, setUsername] = useState("");
 	const [displayUsername, setDisplayUsername] = useState("");
-
 	const [rememberMe, setRememberMe] = useState(false);
 
 	// Wallet states
+
 	const [walletAddress, setWalletAddress] = useState("");
 	const [isConnecting, setIsConnecting] = useState(false);
 	const [error, setError] = useState("");
 	const [isWalletConnected, setIsWalletConnected] = useState(false);
+	const [walletName, setWalletName] = useState("");
 
 	// Check for existing session on component mount
 	useEffect(() => {
 		const checkExistingSession = async () => {
 			try {
-				// First check if Freighter is connected
-				const freighterConnected = await isConnected();
-				if (!freighterConnected.isConnected) {
-					return;
-				}
-
 				// Check localStorage for remembered session
-				const savedSession = localStorage.getItem("stellarSession");
+				const savedSession = localStorage.getItem("starknetSession");
 				if (savedSession) {
 					const session = JSON.parse(savedSession);
 					setUsername(session.username || "");
 					setRememberMe(true);
 
-					// Verify wallet address matches saved address
-					const addressResult = await getAddress();
-					if (addressResult.address && addressResult.address === session.walletAddress) {
-						setWalletAddress(addressResult.address);
-						setIsWalletConnected(true);
+					// Try to reconnect to wallet
+					const reconnect = await connect({
+						modalMode: "neverAsk",
+						webWalletUrl: "https://web.argent.xyz", // Optional: default Argent web wallet URL
+						dappName: "Social Sphere",
+					});
+
+					if (reconnect && reconnect.wallet && reconnect.connectorData?.account) {
+						// Check if the reconnected address matches the saved one
+						if (reconnect.connectorData?.account === session.walletAddress) {
+							setWalletAddress(reconnect.connectorData?.account);
+							setWalletName(reconnect.wallet.name || "Starknet Wallet");
+							setIsWalletConnected(true);
+						}
 					}
 				} else {
 					// Check sessionStorage for current session
-					const tempSession = sessionStorage.getItem("stellarSession");
+					const tempSession = sessionStorage.getItem("starknetSession");
 					if (tempSession) {
 						const session = JSON.parse(tempSession);
 						setUsername(session.username || "");
 
-						// Verify wallet address
-						const addressResult = await getAddress();
-						if (addressResult.address && addressResult.address === session.walletAddress) {
-							setWalletAddress(addressResult.address);
-							setIsWalletConnected(true);
+						// Try to reconnect to wallet
+						const reconnect = await connect({
+							modalMode: "neverAsk",
+							webWalletUrl: "https://web.argent.xyz", // Optional
+							dappName: "Your App Name",
+						});
+
+						if (reconnect && reconnect.wallet && reconnect.connectorData?.account) {
+							// Check if the reconnected address matches the saved one
+							if (reconnect.connectorData.account === session.walletAddress) {
+								setWalletAddress(reconnect.connectorData.account);
+								setWalletName(reconnect.wallet.name || "Starknet Wallet");
+								setIsWalletConnected(true);
+							}
 						}
 					}
 				}
@@ -74,33 +87,32 @@ export default function LogInPage() {
 		setError("");
 
 		try {
-			// Check if Freighter is installed
-			const isAppConnected = await isConnected();
-			if (!isAppConnected.isConnected) {
-				setError("Freighter wallet is not installed or unavailable");
+			// Connect to wallet using StarknetKit
+			const connection = await connect({
+				modalMode: "alwaysAsk", // Options: "neverAsk" | "alwaysAsk" | "onlyIfNotConnected"
+				webWalletUrl: "https://web.argent.xyz", // Optional: default Argent web wallet URL
+				dappName: "Social Sphere",
+			});
+
+			if (!connection || !connection.wallet || !connection.connectorData?.account) {
+				setError("No wallet connection established");
 				return;
 			}
+			console.log(connection);
 
-			// Request access to get the public key
-			const accessObj = await requestAccess();
-			if (accessObj.error) {
-				setError(accessObj.error);
-				return;
-			}
+			// Get the wallet address and name
+			const walletAddress = connection.connectorData?.account;
+			const walletName = connection.wallet.name || "Starknet Wallet";
 
-			// Successfully connected
-			const publicKey = accessObj.address;
-			setWalletAddress(publicKey);
+			setWalletAddress(walletAddress);
+			setWalletName(walletName);
 			setIsWalletConnected(true);
 
 			// Save the username for display purposes
 			setDisplayUsername(username);
 
-			// Clear the input field
-			setUsername("");
-
 			// Save session data
-			saveSession(username, publicKey);
+			saveSession(username, walletAddress);
 		} catch (err) {
 			console.error("Error connecting wallet:", err);
 			setError(err.message || "Failed to connect wallet");
@@ -109,14 +121,29 @@ export default function LogInPage() {
 		}
 	};
 
+	// Disconnect wallet
+	const handleDisconnect = async () => {
+		try {
+			await disconnect({ clearLastWallet: true });
+
+			setWalletAddress("");
+			setWalletName("");
+			setIsWalletConnected(false);
+			localStorage.removeItem("starknetSession");
+			sessionStorage.removeItem("starknetSession");
+		} catch (err) {
+			console.error("Error disconnecting wallet:", err);
+		}
+	};
+
 	// Save session based on rememberMe preference
 	const saveSession = (username: string, walletAddress: string) => {
 		const sessionData = { username, walletAddress };
 
 		if (rememberMe) {
-			localStorage.setItem("stellarSession", JSON.stringify(sessionData));
-			sessionStorage.setItem("stellarSession", JSON.stringify(sessionData));
+			localStorage.setItem("starknetSession", JSON.stringify(sessionData));
 		}
+		sessionStorage.setItem("starknetSession", JSON.stringify(sessionData));
 	};
 
 	return (
@@ -148,18 +175,29 @@ export default function LogInPage() {
 						disabled={isWalletConnected}
 					/>
 
-					{isWalletConnected && <div>{username}</div>}
-					<button
-						onClick={handleWalletConnect}
-						disabled={isConnecting}
-						className={`w-full max-w-[403px] h-[50px] flex items-center justify-center gap-5 sm:gap-3 bg-[#4151FF] text-white font-semibold rounded-[20px] shadow-md hover:bg-[#3240CC] transition ${isConnecting ? "opacity-70 cursor-not-allowed" : ""}`}>
-						<Wallet
-							color="white"
-							size={32}
-						/>
-
-						<p className="font-medium text-[18px] sm:text-[20px] leading-[24.2px]">{isWalletConnected ? "Connected" : isConnecting ? "Connecting..." : "Connect Wallet"}</p>
-					</button>
+					{/* Connect/Disconnect button */}
+					{!isWalletConnected ? (
+						<button
+							onClick={handleWalletConnect}
+							disabled={isConnecting}
+							className={`w-full max-w-[403px] h-[50px] flex items-center justify-center gap-5 sm:gap-3 bg-[#4151FF] text-white font-semibold rounded-[20px] shadow-md hover:bg-[#3240CC] transition ${isConnecting ? "opacity-70 cursor-not-allowed" : ""}`}>
+							<Wallet
+								color="white"
+								size={32}
+							/>
+							<p className="font-medium text-[18px] sm:text-[20px] leading-[24.2px]">{isConnecting ? "Connecting..." : "Connect Wallet"}</p>
+						</button>
+					) : (
+						<button
+							onClick={handleDisconnect}
+							className="w-full max-w-[403px] h-[50px] flex items-center justify-center gap-5 sm:gap-3 bg-red-500 text-white font-semibold rounded-[20px] shadow-md hover:bg-red-600 transition">
+							<Wallet
+								color="white"
+								size={32}
+							/>
+							<p className="font-medium text-[18px] sm:text-[20px] leading-[24.2px]">Disconnect Wallet</p>
+						</button>
+					)}
 
 					{/* Remember me checkbox */}
 					<div className="flex items-center w-full max-w-[403px] px-2">

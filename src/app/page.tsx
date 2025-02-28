@@ -2,7 +2,7 @@
 import Header from "@/component/Header";
 import Head from "next/head";
 import LandingPage from "./pages/LandingPage/LandingPage";
-import LogInPage from "./pages/Log-InPage/LogInPage";
+import LogInPage from "./pages/Log-InPage/LoginPage";
 import { PostComponent } from "@/components/post-form";
 
 const votesData = [
