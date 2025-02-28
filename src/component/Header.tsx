@@ -25,7 +25,7 @@ const Header = () => {
         </a>
       </nav>
 
-      <button className="bg-[#E36C59] hover:bg-[#e37e6f] text-white px-4 py-2 rounded-[30px] mt-4 md:mt-0 w-[157px] h-[48px]   gap-0  opacity-1 shadow-lg leading-[27px]">
+      <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-[30px] mt-4 md:mt-0 w-[157px] h-[48px] gap-0 opacity-1 shadow-lg leading-[27px]">
         Launch Dapp
       </button>
     </header>
