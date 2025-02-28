@@ -12,12 +12,18 @@ export default function NotFound() {
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full flex flex-items-center max-w-[700px] min-h-[450px] bg-white rounded-[32px] p-10 shadow-lg">
         <div className="flex flex-col md:flex-row items-center justify-center gap-10">
-          <div className="md:w-1/2">
-            <div className="relative w-[280px] h-[280px] mx-auto">
-              <Image src="/404.png" alt="404 illustration" fill className="object-contain" priority />
+        <div className="md:w-[50%] flex justify-center">
+          <div className="flex justify-center w-full scale-[2]">
+              <Image
+                src="/404.png"
+                alt="404 illustration"
+                width={400} 
+                height={400}
+                className="object-cover object-center"
+                priority
+              />
             </div>
           </div>
-
           <div className="md:w-1/2 text-left">
             <h1 className="text-6xl  mb-3">Oops!</h1>
             <p className="text-gray-500 text-lg mb-6 max-w-[250px]">We couldn't find the page you were looking for</p>
