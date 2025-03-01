@@ -1,5 +1,5 @@
 "use client";
-import React, { forwardRef, ButtonHTMLAttributes } from "react";
+import React, { forwardRef, type ButtonHTMLAttributes } from "react";
 
 const buttonVariants = {
   variant: {
