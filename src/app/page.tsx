@@ -1,4 +1,5 @@
 // pages/index.js
+"use client"
 import Header from "@/component/Header";
 import Head from "next/head";
 import LandingPage from "./pages/LandingPage/LandingPage";
