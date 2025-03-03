@@ -40,6 +40,7 @@ const LandingPage = () => {
           <p className="mt-4 text-sm md:text-base leading-[24px] text-center">
             Are you new here?
           </p>
+          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
           <button className="bg-primary w-[213.34px] h-[48px]  hover:bg-primary/90 text-white px-4 md:px-6 py-2 md:py-3 mt-6 rounded-[10px] leading-[18px]">
             Get started
           </button>
@@ -65,6 +66,7 @@ const LandingPage = () => {
             },
           ].map((feature, index) => (
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               key={index}
               className="bg-muted text-white p-6 rounded-[45px] shadow-xl items-center w-full max-w-[399px] h-[213px] px-[60px] py-[70px] flex justify-between gap-5"
             >
@@ -161,6 +163,7 @@ const LandingPage = () => {
               },
             ].map((step, index) => (
               <div
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
                 className={`flex items-center ${
                   index % 2 === 0 ? "justify-start" : "justify-end"
@@ -177,6 +180,7 @@ const LandingPage = () => {
                       zIndex: -1,
                     }}
                   >
+                    {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="804"

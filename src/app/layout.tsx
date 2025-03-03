@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
+import { Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import "@/app/globals.css";
 
@@ -20,7 +20,6 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-
   title: "Social Sphere",
   description: "A social platform",
 };
