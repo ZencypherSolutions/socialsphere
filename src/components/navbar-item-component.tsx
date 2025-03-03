@@ -1,4 +1,4 @@
-    import React from 'react';
+    import type React from 'react';
 
     interface NavbarItemProps {
     text: string;
@@ -13,7 +13,8 @@
     };
 
     return (
-        <button
+        // biome-ignore lint/a11y/useButtonType: <explanation>
+<button
         onClick={handleClick}
         className="bg-[#E36C59] text-white font-bold text-lg rounded-full px-6 py-2 shadow-lg hover:bg-[#D9564D] transition-all"
         >

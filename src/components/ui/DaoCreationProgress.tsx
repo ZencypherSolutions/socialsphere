@@ -19,7 +19,7 @@ const DaoCreationProgress: React.FC<DaoCreationProgressProps> = ({
   const progressPercentage = (step / totalSteps) * 100;
 
   return (
-    <div className="bg-[#387478] text-[#EEEEEE] rounded-lg shadow-md p-6 max-w-2xl mx-auto">
+    <div className="bg-secondary text-secondary-foreground rounded-lg shadow-md p-6 max-w-2xl mx-auto">
 
       <div className="flex justify-between items-start">
       <div className="font-semibold text-white">
@@ -32,7 +32,7 @@ const DaoCreationProgress: React.FC<DaoCreationProgressProps> = ({
 
       <div className="relative w-full bg-white rounded-full py-0.5 px-1">
         <div
-          className="bg-[#E36C59] h-3 rounded-full"
+          className="bg-primary h-3 rounded-full"
           style={{ width: `${progressPercentage}%` }}
         ></div>
       </div>
