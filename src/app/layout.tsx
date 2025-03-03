@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
+import { Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
-import "@/app/globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SocialSphereSidebar } from "@/components/social-sphere-sidebar";
-import { CommunityBanner } from "@/components/community-banner";
-import { Navbar } from '@/component/Navbar';
-
+import CommunityBanner from "@/components/community-banner";
+import Navbar from '@/components/navbar-item-component'; 
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -24,7 +22,6 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-
   title: "Social Sphere",
   description: "A social platform",
 };

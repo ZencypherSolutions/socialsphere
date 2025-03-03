@@ -33,7 +33,8 @@ export default function Home() {
     <>
       <div>
         {votesData.map((vote, index) => (
-          <PostComponent key={index} data={vote} />
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+<PostComponent key={index} data={vote} />
         ))}
       </div>
     </>
