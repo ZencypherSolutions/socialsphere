@@ -1,5 +1,7 @@
 "use client"
 
+import { Button } from "@/app/shared/components/button"
+import { Globe2, Users } from 'lucide-react'
 import { useRouter } from "next/navigation"
 
 interface CommunityBannerProps {

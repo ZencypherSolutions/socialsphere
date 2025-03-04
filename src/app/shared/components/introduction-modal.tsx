@@ -1,7 +1,7 @@
 "use client";
 import React, { useState} from "react";
 import Image from "next/image";
-import { intro1, intro2, intro3 } from "../../public";
+import {intro1, intro2, intro3} from "../../../../public/index";
 
 const steps = [
 	{

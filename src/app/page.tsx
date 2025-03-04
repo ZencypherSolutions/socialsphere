@@ -1,42 +1,16 @@
 // pages/index.js
-"use client"
-import Header from "@/component/Header";
+import Header from "@/app/shared/components/Header";
 import Head from "next/head";
-import LandingPage from "./pages/LandingPage/LandingPage";
-import LogInPage from "./pages/Log-InPage/LoginPage";
-import { PostComponent } from "@/components/post-form";
-
-const votesData = [
-  {
-    question: "What type of art is this?",
-    category: "Painting",
-    votes: 12,
-  },
-  {
-    question: "What type of art is this?",
-    category: "Painting",
-    votes: 12,
-  },
-  {
-    question: "What type of art is this?",
-    category: "Painting",
-    votes: 12,
-  },
-  {
-    question: "What type of art is this?",
-    category: "Painting",
-    votes: 12,
-  },
-];
+import LandingPage from "./landing/pages/LandingPage/LandingPage";
+import LogInPage from "./auth/pages/Log-InPage/LogInPage";
+import { PostComponent } from "@/app/shared/components/post-form";
+import DashboardLayout from "./communityDashboard/components/Layout/DashboardLayout";
 
 export default function Home() {
   return (
     <>
       <div>
-        {votesData.map((vote, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-<PostComponent key={index} data={vote} />
-        ))}
+          <LandingPage />
       </div>
     </>
   );

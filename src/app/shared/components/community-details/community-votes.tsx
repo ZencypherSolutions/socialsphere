@@ -1,5 +1,5 @@
 import React from 'react';
-import type { CommunityDetailsProps } from '@/types/community';
+import type { CommunityDetailsProps } from '@/app/core/models/community';
 
 export default function CommunityVotes({ community }: CommunityDetailsProps) {
   return (

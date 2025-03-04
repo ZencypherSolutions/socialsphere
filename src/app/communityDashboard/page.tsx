@@ -1,11 +1,10 @@
-'use client';
-
+import Dashboard from "@/app/shared/components/dasboard";
+import { Community } from "@/app/core/models/community";
 import { useState } from 'react';
-import CommunityDetailsModal from '@/components/community-details/community-modals';
-import type { Community } from '@/types/community';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { SocialSphereSidebar } from '@/components/social-sphere-sidebar';
-import CommunityBanner from '@/components/community-banner';
+import CommunityBanner from "../shared/components/community-banner";
+import CommunityDetailsModal from "../shared/components/community-details/community-modals";
+import { SidebarProvider } from "../shared/components/sidebar";
+import { SocialSphereSidebar } from "../shared/components/social-sphere-sidebar";
 
 export default function ArtCommunityPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
