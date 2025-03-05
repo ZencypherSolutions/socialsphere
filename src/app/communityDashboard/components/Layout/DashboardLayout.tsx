@@ -1,8 +1,8 @@
 "use client";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { SocialSphereSidebar } from "@/components/social-sphere-sidebar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/app/shared/components/sidebar";
+import { SocialSphereSidebar } from "@/app/shared/components/social-sphere-sidebar";
+import { SidebarTrigger } from "@/app/shared/components/sidebar";
 
 export default function DashboardLayout({
   children,

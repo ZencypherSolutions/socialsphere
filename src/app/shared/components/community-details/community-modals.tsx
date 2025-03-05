@@ -1,16 +1,22 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
-import type { ModalProps } from '@/types/community';
+import { Dialog, Transition } from '@headlessui/react'
+import { Fragment } from 'react'
+import type { Community } from '@/app/core/models/community'
+import CommunityHeader from './community-header'
+import CommunityDescription from './community-description'
+import CommunityVotes from './community-votes'
+import CommunityJoinButton from './community-join-button'
 
-interface ModalContainerProps extends ModalProps {
-  children: React.ReactNode;
+interface CommunityDetailsModalProps {
+  isOpen: boolean
+  onClose: () => void
+  community: Community
 }
 
-export default function ModalContainer({
+export default function CommunityDetailsModal({
   isOpen,
   onClose,
-  children,
-}: ModalContainerProps) {
+  community,
+}: CommunityDetailsModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -37,8 +43,14 @@ export default function ModalContainer({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-[#2D4B47] p-6 shadow-xl transition-all">
-                {children}
+              <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-[#2C5154] p-6 shadow-xl transition-all">
+                <CommunityHeader communityName={community.name} onClose={onClose} isOpen={false} />
+
+                <div className="grid grid-cols-[1fr_auto_1fr] gap-6">
+                  <CommunityDescription community={community} />
+                  <CommunityJoinButton />
+                  <CommunityVotes community={community} />
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

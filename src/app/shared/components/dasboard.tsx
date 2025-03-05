@@ -3,7 +3,7 @@ import CommunityBanner from "./community-banner";
 import { SocialSphereSidebar } from "./social-sphere-sidebar";
 import HighlightedVoteCarousel from "./highlighted-votes-carousel";
 import { PostComponent } from "./post-form";
-import { SidebarProvider } from "@/components/ui/sidebar"; 
+import { SidebarProvider } from "@/app/shared/components/sidebar"; 
 
 const Dashboard: React.FC = () => {
   return (

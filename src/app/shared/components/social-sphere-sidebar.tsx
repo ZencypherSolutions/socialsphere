@@ -12,8 +12,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import Profile from './ui/profile'
+} from "@/app/shared/components/sidebar"
+import Profile from './profile'
 
 export function SocialSphereSidebar() {
   return (

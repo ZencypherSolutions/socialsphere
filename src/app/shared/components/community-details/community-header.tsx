@@ -1,7 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Dialog } from '@headlessui/react';
-import CommunityAvatar from '@/components/community-details/community-avatar';
-import type { ModalProps } from '@/types/community';
+import type { ModalProps } from '@/app/core/models/community';
+import CommunityAvatar from './community-avatar';
 
 interface CommunityHeaderProps extends ModalProps {
   communityName: string;
