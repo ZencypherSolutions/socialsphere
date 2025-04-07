@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# temporary holding place for contract ignore files
+contract/target
+contract/.snfoundry_cache/
+contract/snfoundry_trace/
+contract/coverage/
+contract/profile/
