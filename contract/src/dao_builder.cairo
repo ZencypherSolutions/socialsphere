@@ -1,6 +1,6 @@
 // DAO builder acts as the factory contract to initialize a new DAO where a new DAO Core contract is deployed.
 // Anyone can call this contract to instantiate a new DAO and sub-committee/manager roles can be assigned by the DAO Owner in the DAO Core contract.
-// DAO builder is the hub for inspecting overall and individual profile of deloyed DAOs. 
+// DAO builder is the hub for inspecting overall and individual profile of deployed DAOs. 
  
 use starknet::class_hash::ClassHash;
 #[starknet::interface]

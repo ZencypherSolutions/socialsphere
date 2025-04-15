@@ -1,5 +1,5 @@
 // The DAO Core contract manages individual DAOs with role specific functions. 
-// This contract has the option to be connected with the governance contract by passing the governanc contract address to the constructor of dao_core. 
+// This contract has the option to be connected with the governance contract by passing the governance contract address to the constructor of dao_core. 
 
 use starknet::{ContractAddress};
 
