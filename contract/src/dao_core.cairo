@@ -1,8 +1,7 @@
 // The DAO Core contract manages individual DAOs with role specific functions. 
 // This contract has the option to be connected with the governance contract by passing the governanc contract address to the constructor of dao_core. 
-// 
 
-import starknet::ContractAddress;
+use starknet::{ContractAddress};
 
 #[starknet::interface]
 trait IDaoCore<TContractState> {
@@ -30,5 +29,5 @@ trait IDaoCore<TContractState> {
 
     // Transfer the ownership of the DAO to a new owner. 
     // This function can only be called by the DAO Owner. 
-    fn transfer_ownership(ref sef: TContractState, new_owner: ContractAddress); 
+    fn transfer_ownership(ref self: TContractState, new_owner: ContractAddress); 
 }
