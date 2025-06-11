@@ -25,7 +25,11 @@ pub enum DAOCreationState {
 trait IDaoBuilder<TContractState> {
     // Creates a new DAO. This creates a minimum implementation of a DAO.
     fn create_dao(
-        ref self: TContractState, name: felt252, description: felt252, quorum: felt252, salt: felt252
+        ref self: TContractState,
+        name: felt252,
+        description: felt252,
+        quorum: felt252,
+        salt: felt252,
     ) -> ContractAddress;
 
     // Get total number of DAOs in existence.
@@ -37,12 +41,16 @@ trait IDaoBuilder<TContractState> {
 
     // Temporary pauses/unpauses creation of new DAOs. Only the Core Team or the deployer of
     // dao_builder can call these functions.
+    // Temporary pauses/unpauses creation of new DAOs. Only the Core Team or the deployer of
+    // dao_builder can call these functions.
     fn pause_creation(ref self: TContractState) -> bool;
     fn resume_creation(ref self: TContractState) -> bool;
 
     // This function can be called to update the DAO configuration of an existing DAO. Only admin of
     // the DAO can call this function.
-    fn update_core_class_hash(ref self: TContractState, class_hash: ClassHash, dao_address: ContractAddress);
+    fn update_core_class_hash(
+        ref self: TContractState, class_hash: ClassHash, dao_address: ContractAddress,
+    );
 }
 
 #[starknet::contract]
@@ -80,7 +88,7 @@ pub mod DaoBuilder {
         #[flat]
         OwnableEvent: OwnableComponent::Event,
         DAODeployed: DAODeployed,
-        CreationStateChanged: CreationStateChanged
+        CreationStateChanged: CreationStateChanged,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -88,13 +96,13 @@ pub mod DaoBuilder {
         pub index: u32,
         pub deployer: ContractAddress,
         pub deployed_at: u64,
-        pub dao_address: ContractAddress
+        pub dao_address: ContractAddress,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct CreationStateChanged {
         pub new_state: DAOCreationState,
-        pub state_changed_at: u64
+        pub state_changed_at: u64,
     }
 
     #[constructor]
@@ -110,13 +118,20 @@ pub mod DaoBuilder {
         // Creates a new DAO. This creates a minimum implementation of a DAO.
         // if necessary, add the admin to the arguments
         fn create_dao(
-            ref self: ContractState, name: felt252, description: felt252, quorum: felt252, salt: felt252
+            ref self: ContractState,
+            name: felt252,
+            description: felt252,
+            quorum: felt252,
+            salt: felt252,
         ) -> ContractAddress {
             let dao_count = self.dao_count.read();
             let mut constructor_calldata = array![];
             let deployer = get_caller_address();
 
-            assert(self.dao_creation_state.read() == DAOCreationState::CREATIONRESUMED, 'Dao Creation Paused');
+            assert(
+                self.dao_creation_state.read() == DAOCreationState::CREATIONRESUMED,
+                'Dao Creation Paused',
+            );
 
             // TODO:
             // Arrange these params according to the core constructor
@@ -125,34 +140,27 @@ pub mod DaoBuilder {
             quorum.serialize(ref constructor_calldata);
 
             let core_hash = self.core_hash.read();
-            let result = deploy_syscall(
-                core_hash,
-                salt,
-                constructor_calldata.span(),
-                false
-            );
+            let result = deploy_syscall(core_hash, salt, constructor_calldata.span(), false);
             let (dao_address, _) = result.unwrap_syscall();
 
             let dao = DAO {
                 index: dao_count,
                 address: dao_address,
                 deployer,
-                deployed_at: get_block_timestamp()
+                deployed_at: get_block_timestamp(),
             };
 
             self.deployed_daos.entry(dao_address).write(dao);
             self.dao_count.write(dao_count + 1);
 
-            self.emit(
-                DAODeployed {
-                    index: dao_count,
-                    deployer,
-                    deployed_at: get_block_timestamp(),
-                    dao_address
-                }
-            );
+            self
+                .emit(
+                    DAODeployed {
+                        index: dao_count, deployer, deployed_at: get_block_timestamp(), dao_address,
+                    },
+                );
 
-            dao_address  
+            dao_address
         }
 
         // Get total number of DAOs in existence.
@@ -171,40 +179,47 @@ pub mod DaoBuilder {
         fn pause_creation(ref self: ContractState) -> bool {
             self.ownable.assert_only_owner();
             let mut dao_creation_state = self.dao_creation_state.read();
-            assert(dao_creation_state != DAOCreationState::CREATIONPAUSED, 'Creation already paused');
+            assert(
+                dao_creation_state != DAOCreationState::CREATIONPAUSED, 'Creation already paused',
+            );
             dao_creation_state = DAOCreationState::CREATIONPAUSED;
 
-            self.emit(
-                CreationStateChanged {
-                    new_state: DAOCreationState::CREATIONPAUSED,
-                    state_changed_at: get_block_timestamp()
-                }
-            );
+            self
+                .emit(
+                    CreationStateChanged {
+                        new_state: DAOCreationState::CREATIONPAUSED,
+                        state_changed_at: get_block_timestamp(),
+                    },
+                );
 
             true
         }
         fn resume_creation(ref self: ContractState) -> bool {
             self.ownable.assert_only_owner();
             let mut dao_creation_state = self.dao_creation_state.read();
-            assert(dao_creation_state != DAOCreationState::CREATIONRESUMED, 'Creation already resumed');
+            assert(
+                dao_creation_state != DAOCreationState::CREATIONRESUMED, 'Creation already resumed',
+            );
             dao_creation_state = DAOCreationState::CREATIONRESUMED;
 
-            self.emit(
-                CreationStateChanged {
-                    new_state: DAOCreationState::CREATIONRESUMED,
-                    state_changed_at: get_block_timestamp()
-                }
-            );
+            self
+                .emit(
+                    CreationStateChanged {
+                        new_state: DAOCreationState::CREATIONRESUMED,
+                        state_changed_at: get_block_timestamp(),
+                    },
+                );
 
             true
         }
 
         // This function can be called to update the DAO configuration of an existing DAO. Only
         // admin of the DAO can call this function.
-        fn update_core_class_hash(ref self: ContractState, class_hash: ClassHash, dao_address: ContractAddress) {
-            // TODO:
-            // Use openzeppelin upgradeable component inside the core, and use dispatcher mechanism
-            // to call it from here
+        fn update_core_class_hash(
+            ref self: ContractState, class_hash: ClassHash, dao_address: ContractAddress,
+        ) {// TODO:
+        // Use openzeppelin upgradeable component inside the core, and use dispatcher mechanism
+        // to call it from here
         }
     }
 }
