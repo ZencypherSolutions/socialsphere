@@ -1,1 +1,1 @@
-pub mod proposal;
+pub mod types;

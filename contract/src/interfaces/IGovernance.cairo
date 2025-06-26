@@ -1,5 +1,5 @@
 use starknet::ContractAddress;
-use contract::types::proposal::{Action, Proposal, ProposalState};
+use contract::types::types::{Action, Proposal, ProposalState};
 
 /// Interface that all governance modules must implement to be compatible with the SocialSphere platform.
 #[starknet::interface]
@@ -16,7 +16,7 @@ trait IGovernanceModule<TContractState> {
         actions: Span<Action>,
     );
 
-    /// Casts a vote on a proposal
+    /// Casts a vote on a proposal 
     /// # Arguments
     /// * `voter` - The address of the account casting the vote
     /// * `proposal_id` - The ID of the proposal to vote on
