@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="web/public/Socialsphere Logo.png" alt="SocialSphere Logo" width="300" height="auto">
-  <h3>Empowering communities to create and manage DAOs on StarkNet</h3>
+  <img src="Socialsphere-Logo.png" alt="SocialSphere Logo" width="300" height="auto">
+  <h3>Empowering communities to create and manage DAOs on Starknet</h3>
 </div>
 
 <div align="center">
