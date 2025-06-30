@@ -22,7 +22,7 @@ pub enum DAOCreationState {
 }
 
 #[starknet::interface]
-trait IDaoBuilder<TContractState> {
+pub trait IDaoBuilder<TContractState> {
     // Creates a new DAO. This creates a minimum implementation of a DAO.
     fn create_dao(
         ref self: TContractState,
@@ -135,6 +135,7 @@ pub mod DaoBuilder {
 
             // TODO:
             // Arrange these params according to the core constructor
+            deployer.serialize(ref constructor_calldata);
             name.serialize(ref constructor_calldata);
             description.serialize(ref constructor_calldata);
             quorum.serialize(ref constructor_calldata);
@@ -184,6 +185,8 @@ pub mod DaoBuilder {
             );
             dao_creation_state = DAOCreationState::CREATIONPAUSED;
 
+            self.dao_creation_state.write(dao_creation_state);
+
             self
                 .emit(
                     CreationStateChanged {
@@ -201,6 +204,8 @@ pub mod DaoBuilder {
                 dao_creation_state != DAOCreationState::CREATIONRESUMED, 'Creation already resumed',
             );
             dao_creation_state = DAOCreationState::CREATIONRESUMED;
+
+            self.dao_creation_state.write(dao_creation_state);
 
             self
                 .emit(
