@@ -35,6 +35,15 @@ pub trait IDaoBuilder<TContractState> {
     // Get total number of DAOs in existence.
     fn get_dao_count(self: @TContractState) -> u32;
 
+    // Get the current creation state of the DAO builder.
+    fn get_dao_creation_state(self: @TContractState) -> DAOCreationState;
+
+    // Get the core hash of the DAO builder.
+    fn get_core_hash(self: @TContractState) -> ClassHash;
+
+    // Get the owner of the DAO builder.
+    fn get_owner(self: @TContractState) -> ContractAddress;
+
     // Pick one implementation for fetching details of a given DAO.
     // fn get_dao_by_index(self: @TContractState, index: felt252) -> DAO;
     fn get_dao_by_address(self: @TContractState, address: ContractAddress) -> DAO;
@@ -166,6 +175,20 @@ pub mod DaoBuilder {
         // Get total number of DAOs in existence.
         fn get_dao_count(self: @ContractState) -> u32 {
             self.dao_count.read()
+        }
+
+        // Get the current creation state of the DAO builder.
+        fn get_dao_creation_state(self: @ContractState) -> DAOCreationState {
+            self.dao_creation_state.read()
+        }
+
+        fn get_core_hash(self: @ContractState) -> ClassHash {
+            self.core_hash.read()
+        }
+
+        fn get_owner(self: @ContractState) -> ContractAddress {
+            self.ownable.assert_only_owner();
+            self.ownable.owner()
         }
 
         // Pick one implementation for fetching details of a given DAO.
