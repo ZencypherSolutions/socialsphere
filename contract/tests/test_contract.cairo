@@ -4,19 +4,38 @@ use snforge_std::{
     stop_cheat_caller_address, start_cheat_block_timestamp,
     spy_events, EventSpyAssertionsTrait
 };
-use core::array::ArrayTrait;
 use core::num::traits::Zero;
 use core::serde::Serde;
 
 use contract::dao_builder::{
-    IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait, DAOCreationState, DaoBuilder
+    IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait, DaoBuilder
 };
-use DaoBuilder::{DAODeployed, CreationStateChanged};
+use DaoBuilder::DAODeployed;
 use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait};
+// use contract::dao_core::{IDaoCore, IDaoCoreDispatcher, IDaoCoreDispatcherTrait};
 
-fn deploy_contract(name: ByteArray) -> ContractAddress {
-    let contract = declare(name).unwrap().contract_class();
-    let (contract_address, _) = contract.deploy(@ArrayTrait::new()).unwrap();
+fn owner() -> ContractAddress {
+    1.try_into().unwrap()
+}
+
+fn setup() -> ContractAddress {
+    let declare_result = declare("DaoBuilder");
+    let core_class_hash = declare("DaoCore").unwrap().contract_class().class_hash;
+
+    assert(declare_result.is_ok(), 'dao-builder declaration failed');
+
+    let contract_class = declare_result.unwrap().contract_class();
+
+    let mut calldata = array![];
+
+    core_class_hash.serialize(ref calldata);
+    owner().serialize(ref calldata);
+
+    let deploy_result = contract_class.deploy(@calldata);
+
+    assert(deploy_result.is_ok(), 'contract deployment failed');
+
+    let (contract_address, _) = deploy_result.unwrap();
     contract_address
 }
 
@@ -91,6 +110,18 @@ fn test_dao_deployed_event_emission() {
     ];
     spy.assert_emitted(@expected_events);
     stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+#[test]
+fn test_create_dao() {
+    let dao_builder = setup();
+
+    let dispatcher = IDaoBuilderDispatcher { contract_address: dao_builder };
+
+    let _ = dispatcher.create_dao('My DAO', 'Test DAO', '10', '1234');
+
+    let dao_count = dispatcher.get_dao_count();
+    assert(dao_count == 1, 'Invalid dao count');
 }
 
 #[test]

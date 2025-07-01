@@ -3,8 +3,8 @@
 // Anyone can call this contract to instantiate a new DAO and sub-committee/manager roles can be
 // assigned by the DAO Owner in the DAO Core contract.
 // DAO builder is the hub for inspecting overall and individual profile of deployed DAOs.
-use starknet::class_hash::ClassHash;
 use starknet::ContractAddress;
+use starknet::class_hash::ClassHash;
 
 #[derive(Copy, Drop, Serde, starknet::Store)]
 pub struct DAO {
@@ -55,16 +55,15 @@ pub trait IDaoBuilder<TContractState> {
 
 #[starknet::contract]
 pub mod DaoBuilder {
-    use starknet::event::EventEmitter;
-    use starknet::SyscallResultTrait;
-    use super::{DAO, ContractAddress, IDaoBuilder, DAOCreationState};
-    use starknet::storage::{
-        Map, StoragePointerReadAccess, StoragePointerWriteAccess, StoragePathEntry,
-    };
     use openzeppelin::access::ownable::OwnableComponent;
     use starknet::class_hash::ClassHash;
-    use starknet::syscalls::{deploy_syscall};
-    use starknet::{get_caller_address, get_block_timestamp};
+    use starknet::event::EventEmitter;
+    use starknet::storage::{
+        Map, StoragePathEntry, StoragePointerReadAccess, StoragePointerWriteAccess,
+    };
+    use starknet::syscalls::deploy_syscall;
+    use starknet::{SyscallResultTrait, get_block_timestamp, get_caller_address};
+    use super::{ContractAddress, DAO, DAOCreationState, IDaoBuilder};
 
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 
@@ -77,7 +76,7 @@ pub mod DaoBuilder {
         #[substorage(v0)]
         pub ownable: OwnableComponent::Storage,
         pub core_hash: ClassHash,
-        pub deployed_daos: Map::<ContractAddress, DAO>, //map address of a dao to the dao properties
+        pub deployed_daos: Map<ContractAddress, DAO>, //map address of a dao to the dao properties
         pub dao_count: u32,
         pub dao_creation_state: DAOCreationState,
     }
@@ -222,7 +221,7 @@ pub mod DaoBuilder {
         // admin of the DAO can call this function.
         fn update_core_class_hash(
             ref self: ContractState, class_hash: ClassHash, dao_address: ContractAddress,
-        ) {// TODO:
+        ) { // TODO:
         // Use openzeppelin upgradeable component inside the core, and use dispatcher mechanism
         // to call it from here
         }
