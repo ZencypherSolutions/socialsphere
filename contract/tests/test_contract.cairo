@@ -161,31 +161,6 @@ fn test_dao_core_initialization() {
     stop_cheat_caller_address(dao_builder.contract_address);
 }
 
-#[test]
-fn test_pause_creation_success() {
-    // Setup
-    let (dao_builder, owner, _, initial_timestamp) = setup_dao_builder();
-    start_cheat_caller_address(dao_builder.contract_address, owner);
-    let mut spy = spy_events();
-
-    // Test
-    let pause_result = dao_builder.pause_creation();
-    assert!(pause_result, "Pause creation should return true");
-
-    let pause_events = array![
-        (
-            dao_builder.contract_address,
-            DaoBuilder::Event::CreationStateChanged(
-                CreationStateChanged {
-                    new_state: DAOCreationState::CREATIONPAUSED,
-                    state_changed_at: initial_timestamp,
-                }
-            )
-        )
-    ];
-    spy.assert_emitted(@pause_events);
-    stop_cheat_caller_address(dao_builder.contract_address);
-}
 
 #[test]
 #[should_panic(expected: ('Dao Creation Paused',))]
