@@ -24,7 +24,8 @@ allow-prebuilt-plugins = ["snforge_std"]
 
 # Visit https://foundry-rs.github.io/starknet-foundry/appendix/scarb-toml.html for more information
 
-# [tool.snforge]                                             # Define `snforge` tool section
+[tool.snforge]                                             # Define `snforge` tool section
+test-runner = { path = "tests" }
 # exit_first = true                                          # Stop tests execution immediately upon the first failure
 # fuzzer_runs = 1234                                         # Number of runs of the random fuzzer
 # fuzzer_seed = 1111                                         # Seed for the random fuzzer

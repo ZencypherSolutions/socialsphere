@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 #[starknet::interface]
-trait IDaoCore<TContractState> {
+pub trait IDaoCore<TContractState> {
     // Add a member to the DAO with a specified tier.
     // Tier 1 (Owner) cannot be set via this function.
     // Tier 2 (Admin) can only be added by the current owner.
@@ -42,14 +42,14 @@ trait IDaoCore<TContractState> {
     fn get_dao_name(self: @TContractState) -> felt252;
 }
 #[derive(Copy, Drop, PartialEq, Serde)]
-enum MemberTier {
+pub enum MemberTier {
     None,
     Owner,
     SubCommittee,
     GeneralMember,
 }
 #[starknet::contract]
-mod DaoCore {
+pub mod DaoCore {
     use starknet::storage::StorageMapReadAccess;
     use starknet::storage::StorageMapWriteAccess;
     use starknet::{ContractAddress, get_caller_address};
@@ -100,6 +100,10 @@ mod DaoCore {
         members: Map<ContractAddress, bool>,
         // Optional: DAO name for identification.
         name: felt252,
+        // Optional:  DAO description
+        description: felt252,
+        // Optional:  DAO quorum 
+        quorum: felt252,
         // Member counts for each tier.
         admin_count: u32,
         member_count: u32,
@@ -107,10 +111,12 @@ mod DaoCore {
     // Constructor for the DAO Core contract.
     // Initializes the owner (Floor 1) and the DAO name.
     #[constructor]
-    fn constructor(ref self: ContractState, owner: ContractAddress, name: felt252) {
+    fn constructor(ref self: ContractState, owner: ContractAddress, name: felt252, description: felt252, quorum: felt252) {
         assert!(!owner.is_zero(), "Owner address cannot be zero");
         self.owner.write(owner);
         self.name.write(name);
+        self.description.write(description);
+        self.quorum.write(quorum);
     }
 
     // Implementation of the IDaoCore trait

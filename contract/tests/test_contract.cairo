@@ -1,11 +1,18 @@
 use starknet::ContractAddress;
+use snforge_std::{
+    declare, ContractClassTrait, DeclareResultTrait, start_cheat_caller_address,
+    stop_cheat_caller_address, start_cheat_block_timestamp,
+    spy_events, EventSpyAssertionsTrait
+};
+use core::array::ArrayTrait;
+use core::num::traits::Zero;
+use core::serde::Serde;
 
-use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
-
-use contract::IHelloStarknetSafeDispatcher;
-use contract::IHelloStarknetSafeDispatcherTrait;
-use contract::IHelloStarknetDispatcher;
-use contract::IHelloStarknetDispatcherTrait;
+use contract::dao_builder::{
+    IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait, DAOCreationState, DaoBuilder
+};
+use DaoBuilder::{DAODeployed, CreationStateChanged};
+use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait};
 
 fn deploy_contract(name: ByteArray) -> ContractAddress {
     let contract = declare(name).unwrap().contract_class();
@@ -13,35 +20,162 @@ fn deploy_contract(name: ByteArray) -> ContractAddress {
     contract_address
 }
 
+fn setup_dao_builder() -> (IDaoBuilderDispatcher, ContractAddress, ContractAddress, u64) {
+    let owner: ContractAddress = 'owner'.try_into().unwrap();
+    let deployer: ContractAddress = 'deployer'.try_into().unwrap();
+    let initial_timestamp: u64 = 1000;
+    
+    // Declare DaoCore and DaoBuilder
+    let dao_core_class = declare("DaoCore").unwrap().contract_class();
+    let dao_core_class_hash = dao_core_class.class_hash;
+    let dao_builder_class = declare("DaoBuilder").unwrap().contract_class();
+    let mut constructor_calldata = array![];
+    dao_core_class_hash.serialize(ref constructor_calldata);
+    owner.serialize(ref constructor_calldata);
+    let (dao_builder_address, _) = dao_builder_class.deploy(@constructor_calldata).unwrap();
+    let dao_builder = IDaoBuilderDispatcher { contract_address: dao_builder_address };
+
+    // Set timestamp
+    start_cheat_block_timestamp(dao_builder_address, initial_timestamp);
+    
+    (dao_builder, owner, deployer, initial_timestamp)
+}
+
+
 #[test]
-fn test_increase_balance() {
-    let contract_address = deploy_contract("HelloStarknet");
+fn test_create_dao_success() {
+    // Setup
+    let (dao_builder, _, deployer, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    
+    // Test data
+    let dao_name: felt252 = 'TestDAO';
+    let dao_description: felt252 = 'Test DAO Description';
+    let dao_quorum: felt252 = 50;
+    let salt: felt252 = 'unique_salt_123';
 
-    let dispatcher = IHelloStarknetDispatcher { contract_address };
-
-    let balance_before = dispatcher.get_balance();
-    assert(balance_before == 0, 'Invalid balance');
-
-    dispatcher.increase_balance(42);
-
-    let balance_after = dispatcher.get_balance();
-    assert(balance_after == 42, 'Invalid balance');
+    // Test
+    let dao_address = dao_builder.create_dao(dao_name, dao_description, dao_quorum, salt);
+    assert(dao_address.is_non_zero(), 'DAO address should not be zero');
+    stop_cheat_caller_address(dao_builder.contract_address);
 }
 
 #[test]
-#[feature("safe_dispatcher")]
-fn test_cannot_increase_balance_with_zero_value() {
-    let contract_address = deploy_contract("HelloStarknet");
+fn test_dao_deployed_event_emission() {
+    // Setup
+    let (dao_builder, _, deployer, initial_timestamp) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    let mut spy = spy_events();
+    
+    // Test data
+    let dao_name: felt252 = 'TestDAO';
+    let dao_description: felt252 = 'Test DAO Description';
+    let dao_quorum: felt252 = 50;
+    let salt: felt252 = 'unique_salt_123';
 
-    let safe_dispatcher = IHelloStarknetSafeDispatcher { contract_address };
+    // Test
+    let dao_address = dao_builder.create_dao(dao_name, dao_description, dao_quorum, salt);
+    
+    let expected_events = array![
+        (
+            dao_builder.contract_address,
+            DaoBuilder::Event::DAODeployed(
+                DAODeployed {
+                    index: 0,
+                    deployer: deployer,
+                    deployed_at: initial_timestamp,
+                    dao_address: dao_address,
+                }
+            )
+        )
+    ];
+    spy.assert_emitted(@expected_events);
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
 
-    let balance_before = safe_dispatcher.get_balance().unwrap();
-    assert(balance_before == 0, 'Invalid balance');
+#[test]
+fn test_dao_count_increments_after_creation() {
+    // Setup
+    let (dao_builder, _, deployer, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    
+    // Test data
+    let dao_name: felt252 = 'TestDAO';
+    let dao_description: felt252 = 'Test DAO Description';
+    let dao_quorum: felt252 = 50;
+    let salt: felt252 = 'unique_salt_123';
 
-    match safe_dispatcher.increase_balance(0) {
-        Result::Ok(_) => core::panic_with_felt252('Should have panicked'),
-        Result::Err(panic_data) => {
-            assert(*panic_data.at(0) == 'Amount cannot be 0', *panic_data.at(0));
-        },
-    };
+    // Test
+    let initial_dao_count = dao_builder.get_dao_count();
+    dao_builder.create_dao(dao_name, dao_description, dao_quorum, salt);
+    let new_dao_count = dao_builder.get_dao_count();
+    
+    assert(new_dao_count == initial_dao_count + 1, 'DAO count should increment');
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+#[test]
+fn test_dao_metadata_retrieval() {
+    // Setup
+    let (dao_builder, _, deployer, initial_timestamp) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    
+    // Test data
+    let dao_name: felt252 = 'TestDAO';
+    let dao_description: felt252 = 'Test DAO Description';
+    let dao_quorum: felt252 = 50;
+    let salt: felt252 = 'unique_salt_123';
+
+    // Test
+    let dao_address = dao_builder.create_dao(dao_name, dao_description, dao_quorum, salt);
+    let retrieved_dao = dao_builder.get_dao_by_address(dao_address);
+    
+    assert(retrieved_dao.index == 0, 'DAO index should be 0');
+    assert(retrieved_dao.address == dao_address, 'DAO address should match');
+    assert(retrieved_dao.deployer == deployer, 'DAO deployer should match');
+    assert(retrieved_dao.deployed_at == initial_timestamp, 'DAO deployed_at should match');
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+#[test]
+fn test_dao_core_initialization() {
+    // Setup
+    let (dao_builder, _, deployer, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    
+    // Test data
+    let dao_name: felt252 = 'TestDAO';
+    let dao_description: felt252 = 'Test DAO Description';
+    let dao_quorum: felt252 = 50;
+    let salt: felt252 = 'unique_salt_123';
+
+    // Test
+    let dao_address = dao_builder.create_dao(dao_name, dao_description, dao_quorum, salt);
+    let dao_core = IDaoCoreDispatcher { contract_address: dao_address };
+
+    let retrieved_name = dao_core.get_dao_name();
+    assert(retrieved_name == dao_name, 'DAO name should match');
+
+    let dao_owner = dao_core.get_owner();
+    assert(dao_owner == deployer, 'DAO owner should be deployer');
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+
+#[test]
+#[should_panic(expected: ('Dao Creation Paused',))]
+fn test_create_dao_while_paused_fails() {
+    // Setup
+    let (dao_builder, owner, deployer, _) = setup_dao_builder();
+    
+    // First pause creation
+    start_cheat_caller_address(dao_builder.contract_address, owner);
+    dao_builder.pause_creation();
+    stop_cheat_caller_address(dao_builder.contract_address);
+    
+    // Then try to create DAO as deployer (should panic)
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    dao_builder.create_dao('AnotherDAO', 'Another Description', 60, 'different_salt');
+
+    
 }
