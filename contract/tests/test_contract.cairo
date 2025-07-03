@@ -168,7 +168,5 @@ fn test_create_dao_while_paused_fails() {
     
     // Then try to create DAO as deployer (should panic)
     start_cheat_caller_address(dao_builder.contract_address, deployer);
-    dao_builder.create_dao('AnotherDAO', 'Another Description', 60, 'different_salt');
-
-    
+    dao_builder.create_dao('AnotherDAO', 'Another Description', 60, 'different_salt');    
 }
