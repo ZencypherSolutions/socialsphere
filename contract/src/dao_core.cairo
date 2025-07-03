@@ -62,31 +62,31 @@ pub mod DaoCore {
     // Events for tracking state changes
     #[event]
     #[derive(Drop, starknet::Event)]
-    enum Event {
+    pub enum Event {
         MemberAdded: MemberAdded,
         MemberRemoved: MemberRemoved,
         OwnershipTransferred: OwnershipTransferred,
     }
 
     #[derive(Drop, starknet::Event)]
-    struct MemberAdded {
+    pub struct MemberAdded {
         #[key]
-        member_address: ContractAddress,
-        tier: u8,
+        pub member_address: ContractAddress,
+        pub tier: u8,
     }
 
     #[derive(Drop, starknet::Event)]
-    struct MemberRemoved {
+    pub struct MemberRemoved {
         #[key]
-        member_address: ContractAddress,
+        pub member_address: ContractAddress,
     }
 
     #[derive(Drop, starknet::Event)]
-    struct OwnershipTransferred {
+    pub struct OwnershipTransferred {
         #[key]
-        previous_owner: ContractAddress,
+        pub previous_owner: ContractAddress,
         #[key]
-        new_owner: ContractAddress,
+        pub new_owner: ContractAddress,
     }
 
     // Storage for the DAO Core contract
