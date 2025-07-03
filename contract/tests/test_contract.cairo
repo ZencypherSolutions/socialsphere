@@ -1,12 +1,24 @@
-
+use starknet::ContractAddress;
 use snforge_std::{
     declare, ContractClassTrait, DeclareResultTrait, start_cheat_caller_address,
     stop_cheat_caller_address, start_cheat_block_timestamp,
+    spy_events, EventSpyAssertionsTrait
 };
+use core::array::ArrayTrait;
+use core::num::traits::Zero;
+use core::serde::Serde;
 
-use contract::dao_builder::{IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait};
+use contract::dao_builder::{
+    IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait, DAOCreationState, DaoBuilder
+};
+use DaoBuilder::{DAODeployed, CreationStateChanged};
 use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait};
-use starknet::ContractAddress;
+
+fn deploy_contract(name: ByteArray) -> ContractAddress {
+    let contract = declare(name).unwrap().contract_class();
+    let (contract_address, _) = contract.deploy(@ArrayTrait::new()).unwrap();
+    contract_address
+}
 
 fn setup_dao_builder() -> (IDaoBuilderDispatcher, ContractAddress, ContractAddress, u64) {
     let owner: ContractAddress = 'owner'.try_into().unwrap();
@@ -27,6 +39,58 @@ fn setup_dao_builder() -> (IDaoBuilderDispatcher, ContractAddress, ContractAddre
     start_cheat_block_timestamp(dao_builder_address, initial_timestamp);
     
     (dao_builder, owner, deployer, initial_timestamp)
+}
+
+
+#[test]
+fn test_create_dao_success() {
+    // Setup
+    let (dao_builder, _, deployer, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    
+    // Test data
+    let dao_name: felt252 = 'TestDAO';
+    let dao_description: felt252 = 'Test DAO Description';
+    let dao_quorum: felt252 = 50;
+    let salt: felt252 = 'unique_salt_123';
+
+    // Test
+    let dao_address = dao_builder.create_dao(dao_name, dao_description, dao_quorum, salt);
+    assert(dao_address.is_non_zero(), 'DAO address should not be zero');
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+#[test]
+fn test_dao_deployed_event_emission() {
+    // Setup
+    let (dao_builder, _, deployer, initial_timestamp) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    let mut spy = spy_events();
+    
+    // Test data
+    let dao_name: felt252 = 'TestDAO';
+    let dao_description: felt252 = 'Test DAO Description';
+    let dao_quorum: felt252 = 50;
+    let salt: felt252 = 'unique_salt_123';
+
+    // Test
+    let dao_address = dao_builder.create_dao(dao_name, dao_description, dao_quorum, salt);
+    
+    let expected_events = array![
+        (
+            dao_builder.contract_address,
+            DaoBuilder::Event::DAODeployed(
+                DAODeployed {
+                    index: 0,
+                    deployer: deployer,
+                    deployed_at: initial_timestamp,
+                    dao_address: dao_address,
+                }
+            )
+        )
+    ];
+    spy.assert_emitted(@expected_events);
+    stop_cheat_caller_address(dao_builder.contract_address);
 }
 
 #[test]
