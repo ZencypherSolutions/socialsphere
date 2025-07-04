@@ -50,13 +50,14 @@ pub enum MemberTier {
 }
 #[starknet::contract]
 pub mod DaoCore {
-    use starknet::storage::StorageMapReadAccess;
-    use starknet::storage::StorageMapWriteAccess;
-    use starknet::{ContractAddress, get_caller_address};
-    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess, Map};
-    use super::MemberTier;
     use core::num::traits::Zero;
     use core::panic_with_felt252;
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess,
+    };
+    use starknet::{ContractAddress, get_caller_address};
+    use super::MemberTier;
 
 
     // Events for tracking state changes
@@ -102,7 +103,7 @@ pub mod DaoCore {
         name: felt252,
         // Optional:  DAO description
         description: felt252,
-        // Optional:  DAO quorum 
+        // Optional:  DAO quorum
         quorum: felt252,
         // Member counts for each tier.
         admin_count: u32,
@@ -111,7 +112,13 @@ pub mod DaoCore {
     // Constructor for the DAO Core contract.
     // Initializes the owner (Floor 1) and the DAO name.
     #[constructor]
-    fn constructor(ref self: ContractState, owner: ContractAddress, name: felt252, description: felt252, quorum: felt252) {
+    fn constructor(
+        ref self: ContractState,
+        owner: ContractAddress,
+        name: felt252,
+        description: felt252,
+        quorum: felt252,
+    ) {
         assert!(!owner.is_zero(), "Owner address cannot be zero");
         self.owner.write(owner);
         self.name.write(name);

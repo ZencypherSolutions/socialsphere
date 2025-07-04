@@ -42,23 +42,13 @@ fn test_dao_builder_get_dao_count() {
 
     assert(dao_count == 0, 'Invalid dao count');
 
-    let _ = dispatcher.create_dao(
-        'Test DAO 1',
-        'TD1',
-        'Description1',
-        'TD1',
-    );
+    let _ = dispatcher.create_dao('Test DAO 1', 'TD1', 'Description1', 'TD1');
 
     let dao_count = dispatcher.get_dao_count();
 
     assert(dao_count == 1, 'Invalid dao count');
 
-    let _ = dispatcher.create_dao(
-        'Test DAO 2',
-        'TD2',
-        'Description2',
-        'TD2',
-    );
+    let _ = dispatcher.create_dao('Test DAO 2', 'TD2', 'Description2', 'TD2');
 
     let dao_count = dispatcher.get_dao_count();
 
@@ -85,12 +75,7 @@ fn test_dao_builder_get_dao_by_address() {
 
     assert(dao_count == 0, 'Invalid dao count');
 
-    let new_dao = dispatcher.create_dao(
-        'Test DAO 1',
-        'TD1',
-        'Description1',
-        'TD1',
-    );
+    let new_dao = dispatcher.create_dao('Test DAO 1', 'TD1', 'Description1', 'TD1');
 
     let dao_by_address = dispatcher.get_dao_by_address(new_dao);
 
