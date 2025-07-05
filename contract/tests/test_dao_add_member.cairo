@@ -3,7 +3,7 @@ use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait, MemberTier
 use core::num::traits::Zero;
 use core::serde::Serde;
 use snforge_std::{
-    ContractClassTrait, DeclareResultTrait, EventSpyAssertionsTrait, declare, spy_events,
+    ContractClassTrait, DeclareResultTrait, EventSpyAssertionsTrait,EventSpyTrait, declare, spy_events,
     start_cheat_block_timestamp, start_cheat_caller_address, stop_cheat_caller_address,
 };
 use starknet::{ContractAddress, contract_address_const};
@@ -128,7 +128,7 @@ fn test_add_member_to_subcommitee_tier_success() {
 
 
 #[test]
-fn test_promote_member_to_subcommitee_tier_already_admin_eror() {
+fn test_promote_member_to_subcommitee_tier_data_removal_on_general() {
     // Setup
     let (dao_builder, _, deployer, _) = setup_dao_builder();
     let member = member();
@@ -188,13 +188,41 @@ fn test_promote_member_to_subcommitee_tier_success() {
     start_cheat_caller_address(dao_address, deployer);
 
     // add member to subcommitee
+    dao_core.add_member(member, MemberTier::GeneralMember);
+
+    // add member to general tier
     dao_core.add_member(member, MemberTier::SubCommittee);
-    let member_count = dao_core.get_member_count(MemberTier::SubCommittee);
+    stop_cheat_caller_address(deployer);
+}
+
+#[test]
+#[should_panic(expected: 'AlreadyAdmin')]
+fn test_subcommitee_tier_to_promote_member_error() {
+    // Setup
+    let (dao_builder, _, deployer, _) = setup_dao_builder();
+    let member = member();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+
+    // Test data
+    let dao_name: felt252 = 'TestDAO';
+    let dao_description: felt252 = 'Test DAO Description';
+    let dao_quorum: felt252 = 50;
+    let salt: felt252 = 'unique_salt_123';
+
+    // Test
+    let dao_address = dao_builder.create_dao(dao_name, dao_description, dao_quorum, salt);
+    let dao_core = IDaoCoreDispatcher { contract_address: dao_address };
+    stop_cheat_caller_address(dao_builder.contract_address);
+    start_cheat_caller_address(dao_address, deployer);
+
+    // add member to subcommitee
+    dao_core.add_member(member, MemberTier::SubCommittee);
 
     // add member to general tier
     dao_core.add_member(member, MemberTier::GeneralMember);
     stop_cheat_caller_address(deployer);
 }
+
 
 #[test]
 fn test_add_subcommitee_tier_event_check_success() {
@@ -217,18 +245,19 @@ fn test_add_subcommitee_tier_event_check_success() {
     start_cheat_caller_address(dao_address, deployer);
 
     // add member to subcommitee
-    let tier_number = dao_core.add_member(member, MemberTier::SubCommittee);
+   dao_core.add_member(member, MemberTier::SubCommittee);
     // Fetch the MemberAdded event
     let events = spy.get_events();
-    match events.events.into_iter().last() {
+    
+    let tier_number = match events.events.into_iter().last() {
         Option::Some((
             _, event,
         )) => {
-            let market_id_felt = *event.data.at(1); // Access first element
-            market_id_felt.into() // Convert felt252 to u256
+            let market_id_felt = *event.data.at(0); // Access first element
+            market_id_felt // Convert felt252 to u256
         },
         Option::None => panic!("No MemberAdded event emitted"),
-    }
+    };
 
     assert_eq!(tier_number, 2);
     stop_cheat_caller_address(deployer);
@@ -238,7 +267,6 @@ fn test_add_subcommitee_tier_event_check_success() {
 /// general member tier
 
 #[test]
-#[should_panic(expected: 'AlreadyAdmin')]
 fn test_add_member_to_general_tier_success() {
     // Setup
     let (dao_builder, _, deployer, _) = setup_dao_builder();
@@ -291,7 +319,7 @@ fn test_non_owner_add_member_to_general_tier_error() {
 }
 
 #[test]
-fn test_add_subcommitee_tier_event_check_success() {
+fn test_add_general_tier_event_check_success() {
     // Setup
     let (dao_builder, _, deployer, _) = setup_dao_builder();
     let member = member();
@@ -311,18 +339,18 @@ fn test_add_subcommitee_tier_event_check_success() {
     start_cheat_caller_address(dao_address, deployer);
 
     // add member to subcommitee
-    let tier_number = dao_core.add_member(member, MemberTier::GeneralMember);
+    dao_core.add_member(member, MemberTier::GeneralMember);
     // Fetch the MemberAdded event
     let events = spy.get_events();
-    match events.events.into_iter().last() {
+    let tier_number = match events.events.into_iter().last() {
         Option::Some((
             _, event,
         )) => {
-            let market_id_felt = *event.data.at(1); // Access first element
-            market_id_felt.into() // Convert felt252 to u256
+            let market_id_felt = *event.data.at(0); // Access first element
+            market_id_felt // Convert felt252 to u256
         },
         Option::None => panic!("No MemberAdded event emitted"),
-    }
+    };
 
     assert_eq!(tier_number, 3);
     stop_cheat_caller_address(deployer);
