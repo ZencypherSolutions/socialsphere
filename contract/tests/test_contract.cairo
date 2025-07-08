@@ -1,13 +1,16 @@
+use starknet::ContractAddress;
+use snforge_std::{
+    declare, ContractClassTrait, DeclareResultTrait, start_cheat_caller_address,
+    stop_cheat_caller_address, start_cheat_block_timestamp, spy_events, EventSpyAssertionsTrait,
+};
 use DaoBuilder::DAODeployed;
-use contract::dao_builder::{DaoBuilder, IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait};
 use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait};
 use core::num::traits::Zero;
 use core::serde::Serde;
-use snforge_std::{
-    ContractClassTrait, DeclareResultTrait, EventSpyAssertionsTrait, declare, spy_events,
-    start_cheat_block_timestamp, start_cheat_caller_address, stop_cheat_caller_address,
+
+use contract::dao_builder::{
+    IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait, DaoBuilder, DAOCreationState,
 };
-use starknet::ContractAddress;
 
 fn setup_dao_builder() -> (IDaoBuilderDispatcher, ContractAddress, ContractAddress, u64) {
     let owner: ContractAddress = 'owner'.try_into().unwrap();
@@ -165,4 +168,154 @@ fn test_create_dao_while_paused_fails() {
     // Then try to create DAO as deployer (should panic)
     start_cheat_caller_address(dao_builder.contract_address, deployer);
     dao_builder.create_dao('AnotherDAO', 'Another Description', 60, 'different_salt');
+}
+
+#[test]
+fn test_pause_creation_success() {
+    // Setup
+    let (dao_builder, owner, _, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, owner);
+
+    // Test
+    let result = dao_builder.pause_creation();
+    assert(result == true, 'Pause creation should be true');
+
+    let state = dao_builder.get_dao_creation_state();
+    assert(state == DAOCreationState::CREATIONPAUSED, 'State should be paused');
+
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+#[test]
+fn test_pause_creation_emits_event() {
+    // Setup
+    let (dao_builder, owner, _, initial_timestamp) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, owner);
+    let mut spy = spy_events();
+
+    // Test
+    dao_builder.pause_creation();
+
+    let expected_events = array![
+        (
+            dao_builder.contract_address,
+            DaoBuilder::Event::CreationStateChanged(
+                DaoBuilder::CreationStateChanged {
+                    new_state: DAOCreationState::CREATIONPAUSED,
+                    state_changed_at: initial_timestamp,
+                },
+            ),
+        ),
+    ];
+    spy.assert_emitted(@expected_events);
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+#[test]
+#[should_panic(expected: ('Caller is not the owner',))]
+fn test_pause_creation_non_owner_fails() {
+    // Setup
+    let (dao_builder, _, deployer, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+
+    // Test - should panic
+    dao_builder.pause_creation();
+}
+
+#[test]
+#[should_panic(expected: ('Creation already paused',))]
+fn test_pause_creation_already_paused_fails() {
+    // Setup
+    let (dao_builder, owner, _, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, owner);
+
+    // First pause
+    dao_builder.pause_creation();
+
+    // Try to pause again - should panic
+    dao_builder.pause_creation();
+}
+
+#[test]
+fn test_resume_creation_success() {
+    // Setup
+    let (dao_builder, owner, _, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, owner);
+
+    // First pause
+    dao_builder.pause_creation();
+
+    // Test resume
+    let result = dao_builder.resume_creation();
+    assert(result == true, 'Resume creation should be true');
+
+    let state = dao_builder.get_dao_creation_state();
+    assert(state == DAOCreationState::CREATIONRESUMED, 'State should be resumed');
+
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+#[test]
+fn test_resume_creation_emits_event() {
+    // Setup
+    let (dao_builder, owner, _, initial_timestamp) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, owner);
+    let mut spy = spy_events();
+
+    // First pause
+    dao_builder.pause_creation();
+
+    // Test resume
+    dao_builder.resume_creation();
+
+    let expected_events = array![
+        (
+            dao_builder.contract_address,
+            DaoBuilder::Event::CreationStateChanged(
+                DaoBuilder::CreationStateChanged {
+                    new_state: DAOCreationState::CREATIONPAUSED,
+                    state_changed_at: initial_timestamp,
+                },
+            ),
+        ),
+        (
+            dao_builder.contract_address,
+            DaoBuilder::Event::CreationStateChanged(
+                DaoBuilder::CreationStateChanged {
+                    new_state: DAOCreationState::CREATIONRESUMED,
+                    state_changed_at: initial_timestamp,
+                },
+            ),
+        ),
+    ];
+    spy.assert_emitted(@expected_events);
+    stop_cheat_caller_address(dao_builder.contract_address);
+}
+
+#[test]
+#[should_panic(expected: ('Caller is not the owner',))]
+fn test_resume_creation_non_owner_fails() {
+    // Setup
+    let (dao_builder, owner, deployer, _) = setup_dao_builder();
+
+    // First pause as owner
+    start_cheat_caller_address(dao_builder.contract_address, owner);
+    dao_builder.pause_creation();
+    stop_cheat_caller_address(dao_builder.contract_address);
+
+    // Try to resume as non-owner - should panic
+    start_cheat_caller_address(dao_builder.contract_address, deployer);
+    dao_builder.resume_creation();
+}
+
+#[test]
+#[should_panic(expected: ('Creation already resumed',))]
+fn test_resume_creation_already_resumed_fails() {
+    // Setup
+    let (dao_builder, owner, _, _) = setup_dao_builder();
+    start_cheat_caller_address(dao_builder.contract_address, owner);
+
+    // Try to resume when already resumed - should panic
+    dao_builder.resume_creation();
+    dao_builder.create_dao('AnotherDAO', 'Another Description', 60, 'different_salt');    
 }
