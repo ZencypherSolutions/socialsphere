@@ -1,4 +1,26 @@
 use starknet::ContractAddress;
+
+// Vote type 
+#[derive(Copy, Drop, PartialEq, Serde)]
+pub enum VoteType {
+    For,
+    Against,
+    Abstain,
+}
+
+// Proposal structure 
+#[derive(Copy, Drop, Serde, starknet::Store)]
+pub struct Proposal {
+    id: u64,
+    proposer: ContractAddress,
+    vote_start_time: u64,
+    vote_end_time: u64,
+    for_votes: u64,
+    against_votes: u64,
+    abstain_votes: u64,
+    exists: bool, // Flag to check if proposal exists
+}
+
 #[starknet::interface]
 pub trait IDaoCore<TContractState> {
     // Add a member to the DAO with a specified tier.
@@ -40,6 +62,12 @@ pub trait IDaoCore<TContractState> {
 
     // Get the DAO name.
     fn get_dao_name(self: @TContractState) -> felt252;
+
+    // Cast a vote on an active proposal.
+    // Only valid DAO members can vote during the voting period.
+    // Each member can only vote once per proposal.
+    // Emits a VoteCast event.
+    fn cast_vote(ref self: TContractState, proposal_id: u64, vote: VoteType);
 }
 #[derive(Copy, Drop, PartialEq, Serde)]
 pub enum MemberTier {
@@ -54,9 +82,10 @@ pub mod DaoCore {
     use starknet::storage::StorageMapWriteAccess;
     use starknet::{ContractAddress, get_caller_address};
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess, Map};
-    use super::MemberTier;
+    use super::{MemberTier, VoteType, Proposal};
     use core::num::traits::Zero;
     use core::panic_with_felt252;
+    use starknet::get_block_timestamp;
 
 
     // Events for tracking state changes
@@ -66,6 +95,7 @@ pub mod DaoCore {
         MemberAdded: MemberAdded,
         MemberRemoved: MemberRemoved,
         OwnershipTransferred: OwnershipTransferred,
+        VoteCast: VoteCast,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -89,6 +119,15 @@ pub mod DaoCore {
         pub new_owner: ContractAddress,
     }
 
+    #[derive(Drop, starknet::Event)]
+    struct VoteCast {
+        #[key]
+        proposal_id: u64,
+        #[key]
+        voter: ContractAddress,
+        vote: VoteType,
+    }
+
     // Storage for the DAO Core contract
     #[storage]
     struct Storage {
@@ -107,6 +146,11 @@ pub mod DaoCore {
         // Member counts for each tier.
         admin_count: u32,
         member_count: u32,
+        
+        // Proposal and voting storage
+        proposals: Map<u64, Proposal>, // proposal_id -> Proposal
+        has_voted: Map<(u64, ContractAddress), bool>, // (proposal_id, voter) -> has_voted
+        next_proposal_id: u64, // Counter for proposal IDs
     }
     // Constructor for the DAO Core contract.
     // Initializes the owner (Floor 1) and the DAO name.
@@ -117,6 +161,7 @@ pub mod DaoCore {
         self.name.write(name);
         self.description.write(description);
         self.quorum.write(quorum);
+        self.next_proposal_id.write(1); // Initialize proposal counter
     }
 
     // Implementation of the IDaoCore trait
@@ -266,6 +311,49 @@ pub mod DaoCore {
         // Get the DAO name.
         fn get_dao_name(self: @ContractState) -> felt252 {
             self.name.read()
+        }
+
+        // Cast a vote on an active proposal.
+        fn cast_vote(ref self: ContractState, proposal_id: u64, vote: VoteType) {
+            let caller = get_caller_address();
+            
+            let proposal = self.proposals.read(proposal_id);
+            assert!(proposal.exists, "Proposal does not exist");
+            
+            let current_time = get_block_timestamp();
+            assert!(current_time >= proposal.vote_start_time, "Voting has not started yet");
+            assert!(current_time <= proposal.vote_end_time, "Voting period has ended");
+            
+            let is_owner = self.is_member(caller, MemberTier::Owner);
+            let is_admin = self.is_member(caller, MemberTier::SubCommittee);
+            let is_member = self.is_member(caller, MemberTier::GeneralMember);
+            assert!(is_owner || is_admin || is_member, "Caller is not a DAO member");
+            
+            let has_already_voted = self.has_voted.read((proposal_id, caller));
+                assert!(!has_already_voted, "Voter has already voted on this proposal");
+                
+            let mut updated_proposal = proposal;
+            match vote {
+                VoteType::For => {
+                    updated_proposal.for_votes += 1;
+                },
+                VoteType::Against => {
+                    updated_proposal.against_votes += 1;
+                },
+                VoteType::Abstain => {
+                    updated_proposal.abstain_votes += 1;
+                },
+            }
+            
+            self.proposals.write(proposal_id, updated_proposal);
+            
+            self.has_voted.write((proposal_id, caller), true);
+            
+            self.emit(Event::VoteCast(VoteCast { 
+                proposal_id, 
+                voter: caller, 
+                vote 
+            }));
         }
     }
 
