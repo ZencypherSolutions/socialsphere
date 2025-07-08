@@ -78,14 +78,15 @@ pub enum MemberTier {
 }
 #[starknet::contract]
 pub mod DaoCore {
-    use starknet::storage::StorageMapReadAccess;
-    use starknet::storage::StorageMapWriteAccess;
     use starknet::{ContractAddress, get_caller_address};
-    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess, Map};
     use super::{MemberTier, VoteType, Proposal};
     use core::num::traits::Zero;
     use core::panic_with_felt252;
     use starknet::get_block_timestamp;
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess,
+    };
 
 
     // Events for tracking state changes

@@ -3,14 +3,14 @@ use snforge_std::{
     declare, ContractClassTrait, DeclareResultTrait, start_cheat_caller_address,
     stop_cheat_caller_address, start_cheat_block_timestamp, spy_events, EventSpyAssertionsTrait,
 };
+use DaoBuilder::DAODeployed;
+use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait};
 use core::num::traits::Zero;
 use core::serde::Serde;
 
 use contract::dao_builder::{
     IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait, DaoBuilder, DAOCreationState,
 };
-use DaoBuilder::{DAODeployed};
-use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait};
 
 fn setup_dao_builder() -> (IDaoBuilderDispatcher, ContractAddress, ContractAddress, u64) {
     let owner: ContractAddress = 'owner'.try_into().unwrap();
