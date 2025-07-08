@@ -317,4 +317,5 @@ fn test_resume_creation_already_resumed_fails() {
 
     // Try to resume when already resumed - should panic
     dao_builder.resume_creation();
+    dao_builder.create_dao('AnotherDAO', 'Another Description', 60, 'different_salt');    
 }
