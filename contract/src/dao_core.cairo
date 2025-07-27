@@ -68,6 +68,14 @@ pub trait IDaoCore<TContractState> {
     // Each member can only vote once per proposal.
     // Emits a VoteCast event.
     fn cast_vote(ref self: TContractState, proposal_id: u64, vote: VoteType);
+
+    // Create a proposal for testing purposes
+    fn create_proposal(
+        ref self: TContractState,
+        proposer: ContractAddress,
+        vote_start_time: u64,
+        vote_end_time: u64,
+    ) -> u64;
 }
 #[derive(Copy, Drop, PartialEq, Serde)]
 pub enum MemberTier {
@@ -361,6 +369,31 @@ pub mod DaoCore {
                 voter: caller, 
                 vote 
             }));
+        }
+
+        // Create a proposal for testing purposes
+        fn create_proposal(
+            ref self: ContractState,
+            proposer: ContractAddress,
+            vote_start_time: u64,
+            vote_end_time: u64,
+        ) -> u64 {
+            let proposal_id = self.next_proposal_id.read();
+            self.next_proposal_id.write(proposal_id + 1);
+            
+            let proposal = Proposal {
+                id: proposal_id,
+                proposer,
+                vote_start_time,
+                vote_end_time,
+                for_votes: 0,
+                against_votes: 0,
+                abstain_votes: 0,
+                exists: true,
+            };
+            
+            self.proposals.write(proposal_id, proposal);
+            proposal_id
         }
     }
 
