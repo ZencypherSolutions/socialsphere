@@ -5,6 +5,7 @@
 // DAO builder is the hub for inspecting overall and individual profile of deployed DAOs.
 use starknet::ContractAddress;
 use starknet::class_hash::ClassHash;
+use crate::types::DaoConfig;
 
 #[derive(Copy, Drop, Serde, starknet::Store)]
 pub struct DAO {
@@ -60,6 +61,8 @@ pub trait IDaoBuilder<TContractState> {
     fn update_core_class_hash(
         ref self: TContractState, class_hash: ClassHash, dao_address: ContractAddress,
     );
+
+    fn create_simple_dao(ref self: TContractState, config: DaoConfig, salt: felt252) -> ContractAddress;
 }
 
 #[starknet::contract]
@@ -80,6 +83,7 @@ pub mod DaoBuilder {
     impl OwnableMixinImpl = OwnableComponent::OwnableMixinImpl<ContractState>;
     impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
 
+    use crate::types::DaoConfig;
     #[storage]
     pub struct Storage {
         #[substorage(v0)]
@@ -88,6 +92,9 @@ pub mod DaoBuilder {
         pub deployed_daos: Map<ContractAddress, DAO>, //map address of a dao to the dao properties
         pub dao_count: u32,
         pub dao_creation_state: DAOCreationState,
+        pub voting_period: u32,
+        pub admin: ContractAddress,
+        pub vote_weight_module: ContractAddress,
     }
 
     #[event]
@@ -114,11 +121,14 @@ pub mod DaoBuilder {
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, initial_core_hash: ClassHash, owner: ContractAddress) {
+    fn constructor(ref self: ContractState, initial_core_hash: ClassHash, owner: ContractAddress, config: DaoConfig) {
         self.ownable.initializer(owner);
         self.dao_creation_state.write(DAOCreationState::CREATIONRESUMED);
         self.dao_count.write(0);
         self.core_hash.write(initial_core_hash);
+        self.admin.write(config.admin);
+        self.voting_period.write(config.voting_period);
+        self.vote_weight_module.write(config.vote_weight_module);
     }
 
     #[abi(embed_v0)]
@@ -247,6 +257,37 @@ pub mod DaoBuilder {
         ) { // TODO:
         // Use openzeppelin upgradeable component inside the core, and use dispatcher mechanism
         // to call it from here
+        }
+
+        fn create_simple_dao(ref self: ContractState, config: DaoConfig, salt: felt252) -> ContractAddress {
+
+            let dao_count = self.dao_count.read();
+            let mut constructor_calldata = array![];
+            let deployer = get_caller_address();
+
+            config.serialize(ref constructor_calldata);
+
+            let core_hash = self.core_hash.read();
+            let result = deploy_syscall(core_hash, salt, constructor_calldata.span(), false);
+            let (dao_address, _) = result.unwrap_syscall();
+
+            let dao = DAO {
+              index: dao_count,
+              address: dao_address,
+              deployer,
+              deployed_at: get_block_timestamp(),
+      };
+
+        self.deployed_daos.entry(dao_address).write(dao);
+      self.dao_count.write(dao_count + 1);
+
+      self.emit(
+          DAODeployed {
+              index: dao_count, deployer, deployed_at: get_block_timestamp(), dao_address,
+          },
+      );
+
+      dao_address
         }
     }
 }
