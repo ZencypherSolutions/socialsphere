@@ -11,16 +11,18 @@ const Header = () => {
 
   return (
     <header className="relative bg-[#EEEEEE]">
-      <div className="flex justify-between items-center px-4 sm:px-6 py-4">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 py-4">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-black rounded-full flex items-center justify-center">
             <div className="text-white text-xs sm:text-sm font-bold">SS</div>
           </div>
-          <h1 className="text-lg sm:text-xl font-bold text-[#000000]">SocialSphere</h1>
+          <h1 className="text-lg sm:text-xl font-bold text-[#000000]">
+            SocialSphere
+          </h1>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-8 text-[16px] text-gray-600">
+        {/* Desktop Navigation - Centered */}
+        <nav className="hidden md:flex gap-8 text-[16px] text-gray-600 absolute left-1/2 transform -translate-x-1/2">
           <a href="#" className="hover:text-[#232931]">
             About us
           </a>

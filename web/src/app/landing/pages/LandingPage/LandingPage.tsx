@@ -20,34 +20,37 @@ const LandingPage = () => {
         <Header />
 
         {/* Hero Section */}
-        <section className="text-center py-16 px-6 bg-[#EEEEEE]">
+        <section className="text-center py-8 sm:py-16 px-4 sm:px-6 bg-[#EEEEEE]">
           <div className="flex justify-center">
-            <div className="w-full max-w-[700px]">
-              <div className="text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[50px]">
+            <div className="w-full max-w-[700px] relative flex flex-col items-center px-4">
+              <div className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] sm:-ml-[120px] md:-ml-[160px]">
                 Empowering
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold font-space bg-primary px-[20px] text-white py-[10px] rounded-[30px] justify-self-end leading-[50px] shadow-md">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold font-space bg-primary px-[15px] sm:px-[20px] text-white py-[8px] sm:py-[10px] rounded-[20px] sm:rounded-[30px] leading-[30px] sm:leading-[50px] shadow-md inline-block ml-[100px] sm:ml-[140px] md:ml-[180px]">
                 Communities
               </h1>
-              <div className="text-4xl md:text-5xl font-bold text-[#232931] font-space mr-20 right-8 px-[15px] py-[5px] leading-[50px]">
+              <div className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] -ml-[80px] sm:-ml-[120px] md:-ml-[160px]">
                 Through
               </div>
-              <div className="text-4xl md:text-5xl font-bold font-space justify-self-end leading-[50px]">
+
+              <div className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] ml-[100px] sm:ml-[140px] md:ml-[180px]">
                 Decentralization
               </div>
             </div>
           </div>
+
           <p className="mt-4 text-sm md:text-base leading-[24px] text-center">
             Are you new here?
           </p>
-          <button className="bg-primary w-[213.34px] h-[48px] hover:bg-primary/90 text-white px-4 md:px-6 py-2 md:py-3 mt-6 rounded-[10px] leading-[18px]">
+
+          <button className="bg-primary w-[180px] sm:w-[213.34px] h-[48px] hover:bg-primary/90 text-white px-4 md:px-6 py-2 md:py-3 mt-6 rounded-[10px] leading-[18px]">
             Get started
           </button>
         </section>
 
         {/* Features */}
-        <section className="flex flex-col md:flex-row gap-6 px-6 py-12 md:px-10 justify-center">
+        <section className="flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 sm:px-6 py-12 justify-center overflow-hidden">
           {[
             {
               text: "Seamless DAO templates with voting and secure fund management for communities.",
@@ -67,9 +70,9 @@ const LandingPage = () => {
           ].map((feature, index) => (
             <div
               key={index}
-              className="bg-muted text-white p-4 md:p-6 rounded-[45px] shadow-xl items-center w-full max-w-[399px] min-h-[180px] md:h-[213px] px-4 md:px-[60px] py-6 md:py-[70px] flex flex-col md:flex-row justify-between gap-4 md:gap-5"
+              className="bg-muted text-white p-4 lg:p-6 rounded-[45px] shadow-xl items-center w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[399px] min-h-[180px] lg:h-[213px] px-4 sm:px-6 lg:px-[40px] xl:px-[60px] py-6 lg:py-[70px] flex flex-col lg:flex-row justify-between gap-4 lg:gap-5 mx-auto"
             >
-              <p className="flex-1 text-[16px] md:text-[18px] font-space leading-[20px] md:leading-[22.98px] text-center md:text-left">
+              <p className="flex-1 text-[16px] lg:text-[18px] font-space leading-[20px] lg:leading-[22.98px] text-center lg:text-left">
                 {feature.text}
               </p>
               <Image
@@ -79,10 +82,10 @@ const LandingPage = () => {
                 height={feature.id === 1 ? 63 : feature.id === 2 ? 71 : 73}
                 className={`object-contain filter brightness-0 invert flex-shrink-0 ${
                   feature.id === 1
-                    ? "w-[60px] h-[40px] md:w-[94.4px] md:h-[63.49px]"
+                    ? "w-[60px] h-[40px] lg:w-[94.4px] lg:h-[63.49px]"
                     : feature.id === 2
-                    ? "w-[50px] h-[50px] md:w-[70px] md:h-[71px]"
-                    : "w-[60px] h-[48px] md:w-[90.44px] md:h-[72.96px]"
+                    ? "w-[50px] h-[50px] lg:w-[70px] lg:h-[71px]"
+                    : "w-[60px] h-[48px] lg:w-[90.44px] lg:h-[72.96px]"
                 }`}
               />
             </div>
@@ -90,19 +93,24 @@ const LandingPage = () => {
         </section>
 
         {/* about us  */}
-        <section className="py-16 px-6 bg-secondary text-secondary-foreground">
-          <h3 className="text-6xl sm:text-8xl md:text-[115px] font-bold mb-6 font-space leading-tight md:leading-[144px] text-center">
-            About
-          </h3>
-          <p className="text-sm md:text-base max-w-[618.87px] text-center font-inter font-[400] text-[26px] leading-[36px] mx-auto">
-            Team of product and brand designers that are really passionate about
-            blockchain technology and good design. We are not just UI freaks! We
-            advocate users for better product experience and common sense.
-          </p>
-          <p className="flex items-center justify-center leading-[39px] text-[18px] font-inter font-[400]">
-            More About us
-            <FaArrowRight size={24} color="gray" className="ml-2" />
-          </p>
+        <section className="py-16 px-6 bg-[#3B4A6B] text-white">
+          <div className="max-w-4xl mx-auto flex flex-col items-center">
+            <div className="w-full max-w-[618.87px]">
+              <h3 className="text-6xl sm:text-8xl md:text-[115px] font-bold mb-6 font-space leading-tight md:leading-[144px] text-left">
+                About
+              </h3>
+              <p className="text-sm md:text-base text-left font-inter font-[400] text-[26px] leading-[36px] mb-8">
+                Team of product and brand designers that are really passionate
+                about blockchain technology and good design. We are not just UI
+                freaks! We advocate users for better product experience and
+                common sense.
+              </p>
+              <p className="flex items-center text-[18px] font-inter font-[400] cursor-pointer hover:opacity-80 transition-opacity">
+                More about us
+                <FaArrowRight size={24} color="white" className="ml-2" />
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Roadmap */}
