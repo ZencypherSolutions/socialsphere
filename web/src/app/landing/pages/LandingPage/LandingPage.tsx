@@ -3,7 +3,22 @@ import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
+import { motion } from "framer-motion";
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
+};
 const LandingPage = () => {
   return (
     <>
@@ -15,39 +30,44 @@ const LandingPage = () => {
         />
       </Head>
 
-      <main className="bg-[#EEEEEE] min-h-screen font-sans">
+      <main className="bg-[#EEEEEE] min-h-screen font-sans overflow-x-hidden">
         {/* Navbar */}
         <Header />
 
         {/* Hero Section */}
-        <section className="text-center py-8 sm:py-16 px-4 sm:px-6 bg-[#EEEEEE]">
+        <motion.section
+          className="text-center py-8 sm:py-16 px-4 sm:px-6 bg-[#EEEEEE]"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <div className="flex justify-center">
             <div className="w-full max-w-[700px] relative flex flex-col items-center px-4">
-              <div className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] sm:-ml-[120px] md:-ml-[160px]">
-                Empowering
-              </div>
+              <motion.div variants={itemVariants} className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] sm:-ml-[120px] md:-ml-[160px]">
+                 Empowering
+              </motion.div>
 
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold font-space bg-primary px-[15px] sm:px-[20px] text-white py-[8px] sm:py-[10px] rounded-[20px] sm:rounded-[30px] leading-[30px] sm:leading-[50px] shadow-md inline-block ml-[100px] sm:ml-[140px] md:ml-[180px]">
-                Communities
-              </h1>
-              <div className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] -ml-[80px] sm:-ml-[120px] md:-ml-[160px]">
-                Through
-              </div>
+              <motion.h1 variants={itemVariants} className="text-2xl sm:text-4xl md:text-5xl font-bold font-space bg-primary px-[15px] sm:px-[20px] text-white py-[8px] sm:py-[10px] rounded-[20px] sm:rounded-[30px] leading-[30px] sm:leading-[50px] shadow-md inline-block ml-[100px] sm:ml-[140px] md:ml-[180px]">
+                 Communities
+              </motion.h1>
+              <motion.div variants={itemVariants} className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] -ml-[80px] sm:-ml-[120px] md:-ml-[160px]">
+                 Through
+              </motion.div>
 
-              <div className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] ml-[100px] sm:ml-[140px] md:ml-[180px]">
-                Decentralization
-              </div>
+             <motion.div variants={itemVariants} className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#232931] font-space leading-[30px] sm:leading-[50px] ml-[100px] sm:ml-[140px] md:ml-[180px]">
+                 Decentralization
+              </motion.div>
             </div>
           </div>
 
-          <p className="mt-4 text-sm md:text-base leading-[24px] text-center">
-            Are you new here?
-          </p>
+          <motion.p variants={itemVariants} className="mt-4 text-sm md:text-base leading-[24px] text-center">
+             Are you new here?
+          </motion.p>
 
-          <button className="bg-primary w-[180px] sm:w-[213.34px] h-[48px] hover:bg-primary/90 text-white px-4 md:px-6 py-2 md:py-3 mt-6 rounded-[10px] leading-[18px]">
-            Get started
-          </button>
-        </section>
+          <motion.button variants={itemVariants} className="bg-primary w-[180px] sm:w-[213.34px] h-[48px] hover:bg-primary/90 text-white px-4 md:px-6 py-2 md:py-3 mt-6 rounded-[10px] leading-[18px]">
+             Get started
+          </motion.button>
+        </motion.section>
 
         {/* Features */}
         <section className="flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 sm:px-6 py-12 justify-center overflow-hidden">
