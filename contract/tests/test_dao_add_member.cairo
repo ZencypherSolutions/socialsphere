@@ -3,8 +3,8 @@ use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait, MemberTier
 use core::num::traits::Zero;
 use core::serde::Serde;
 use snforge_std::{
-    ContractClassTrait, DeclareResultTrait, EventSpyAssertionsTrait,EventSpyTrait, declare, spy_events,
-    start_cheat_block_timestamp, start_cheat_caller_address, stop_cheat_caller_address,
+    ContractClassTrait, DeclareResultTrait, EventSpyAssertionsTrait, EventSpyTrait, declare,
+    spy_events, start_cheat_block_timestamp, start_cheat_caller_address, stop_cheat_caller_address,
 };
 use starknet::{ContractAddress, contract_address_const};
 
@@ -245,10 +245,10 @@ fn test_add_subcommitee_tier_event_check_success() {
     start_cheat_caller_address(dao_address, deployer);
 
     // add member to subcommitee
-   dao_core.add_member(member, MemberTier::SubCommittee);
+    dao_core.add_member(member, MemberTier::SubCommittee);
     // Fetch the MemberAdded event
     let events = spy.get_events();
-    
+
     let tier_number = match events.events.into_iter().last() {
         Option::Some((
             _, event,

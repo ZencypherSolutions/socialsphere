@@ -62,7 +62,9 @@ pub trait IDaoBuilder<TContractState> {
         ref self: TContractState, class_hash: ClassHash, dao_address: ContractAddress,
     );
 
-    fn create_simple_dao(ref self: TContractState, config: DaoConfig, salt: felt252) -> ContractAddress;
+    fn create_simple_dao(
+        ref self: TContractState, config: DaoConfig, salt: felt252,
+    ) -> ContractAddress;
 }
 
 #[starknet::contract]
@@ -82,7 +84,6 @@ pub mod DaoBuilder {
     #[abi(embed_v0)]
     impl OwnableMixinImpl = OwnableComponent::OwnableMixinImpl<ContractState>;
     impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
-
     use crate::types::DaoConfig;
     #[storage]
     pub struct Storage {
@@ -121,7 +122,12 @@ pub mod DaoBuilder {
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, initial_core_hash: ClassHash, owner: ContractAddress, config: DaoConfig) {
+    fn constructor(
+        ref self: ContractState,
+        initial_core_hash: ClassHash,
+        owner: ContractAddress,
+        config: DaoConfig,
+    ) {
         self.ownable.initializer(owner);
         self.dao_creation_state.write(DAOCreationState::CREATIONRESUMED);
         self.dao_count.write(0);
@@ -259,8 +265,9 @@ pub mod DaoBuilder {
         // to call it from here
         }
 
-        fn create_simple_dao(ref self: ContractState, config: DaoConfig, salt: felt252) -> ContractAddress {
-
+        fn create_simple_dao(
+            ref self: ContractState, config: DaoConfig, salt: felt252,
+        ) -> ContractAddress {
             let dao_count = self.dao_count.read();
             let mut constructor_calldata = array![];
             let deployer = get_caller_address();
@@ -272,22 +279,23 @@ pub mod DaoBuilder {
             let (dao_address, _) = result.unwrap_syscall();
 
             let dao = DAO {
-              index: dao_count,
-              address: dao_address,
-              deployer,
-              deployed_at: get_block_timestamp(),
-      };
+                index: dao_count,
+                address: dao_address,
+                deployer,
+                deployed_at: get_block_timestamp(),
+            };
 
-        self.deployed_daos.entry(dao_address).write(dao);
-      self.dao_count.write(dao_count + 1);
+            self.deployed_daos.entry(dao_address).write(dao);
+            self.dao_count.write(dao_count + 1);
 
-      self.emit(
-          DAODeployed {
-              index: dao_count, deployer, deployed_at: get_block_timestamp(), dao_address,
-          },
-      );
+            self
+                .emit(
+                    DAODeployed {
+                        index: dao_count, deployer, deployed_at: get_block_timestamp(), dao_address,
+                    },
+                );
 
-      dao_address
+            dao_address
         }
     }
 }

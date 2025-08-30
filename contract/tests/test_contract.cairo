@@ -1,16 +1,15 @@
-use starknet::ContractAddress;
-use snforge_std::{
-    declare, ContractClassTrait, DeclareResultTrait, start_cheat_caller_address,
-    stop_cheat_caller_address, start_cheat_block_timestamp, spy_events, EventSpyAssertionsTrait,
-};
 use DaoBuilder::DAODeployed;
+use contract::dao_builder::{
+    DAOCreationState, DaoBuilder, IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait,
+};
 use contract::dao_core::{IDaoCoreDispatcher, IDaoCoreDispatcherTrait};
 use core::num::traits::Zero;
 use core::serde::Serde;
-
-use contract::dao_builder::{
-    IDaoBuilderDispatcher, IDaoBuilderDispatcherTrait, DaoBuilder, DAOCreationState,
+use snforge_std::{
+    ContractClassTrait, DeclareResultTrait, EventSpyAssertionsTrait, declare, spy_events,
+    start_cheat_block_timestamp, start_cheat_caller_address, stop_cheat_caller_address,
 };
+use starknet::ContractAddress;
 
 fn setup_dao_builder() -> (IDaoBuilderDispatcher, ContractAddress, ContractAddress, u64) {
     let owner: ContractAddress = 'owner'.try_into().unwrap();
@@ -317,5 +316,5 @@ fn test_resume_creation_already_resumed_fails() {
 
     // Try to resume when already resumed - should panic
     dao_builder.resume_creation();
-    dao_builder.create_dao('AnotherDAO', 'Another Description', 60, 'different_salt');    
+    dao_builder.create_dao('AnotherDAO', 'Another Description', 60, 'different_salt');
 }
