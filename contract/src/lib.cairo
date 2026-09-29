@@ -1,6 +1,7 @@
 //mod governance;
 pub mod CustomFactor;
 pub mod IGovernanceModule;
+pub mod ITreasuryModule;
 pub mod dao_builder;
 pub mod dao_core;
 pub mod dao_treasury;
